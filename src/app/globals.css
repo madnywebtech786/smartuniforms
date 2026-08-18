@@ -1,0 +1,72 @@
+@import "tailwindcss";
+
+/*
+  Design tokens — Smart Uniform and Embroidery
+  Light-only futuristic-editorial system. See docs/superpowers/specs for rationale.
+*/
+:root {
+  /* Core palette */
+  --stitch-black: #14130f;
+  --canvas: #f8f5ee;
+  --panel: #ffffff;
+  --thread-gold: #fbae47;
+  --thread-gold-deep: #e0932e;
+  --graphite: #5c584f;
+  --hairline: #e3ddce;
+
+  /* Semantic tokens */
+  --color-background: var(--canvas);
+  --color-foreground: var(--stitch-black);
+  --color-surface: var(--panel);
+  --color-surface-elevated: #ffffff;
+  --color-muted-foreground: var(--graphite);
+  --color-border: var(--hairline);
+  --color-primary: var(--thread-gold);
+  --color-primary-deep: var(--thread-gold-deep);
+  --color-primary-foreground: var(--stitch-black);
+  --color-accent: var(--thread-gold);
+  --color-accent-foreground: var(--stitch-black);
+
+  /* Motion */
+  --ease-cinematic: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@theme inline {
+  --color-background: var(--color-background);
+  --color-foreground: var(--color-foreground);
+  --color-surface: var(--color-surface);
+  --color-surface-elevated: var(--color-surface-elevated);
+  --color-muted-foreground: var(--color-muted-foreground);
+  --color-border: var(--color-border);
+  --color-primary: var(--color-primary);
+  --color-primary-deep: var(--color-primary-deep);
+  --color-primary-foreground: var(--color-primary-foreground);
+  --color-accent: var(--color-accent);
+  --color-accent-foreground: var(--color-accent-foreground);
+
+  --font-display: var(--font-carter-one);
+  --font-sans: var(--font-familjen-grotesk);
+
+  --ease-cinematic: var(--ease-cinematic);
+  --ease-standard: var(--ease-standard);
+}
+
+body {
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+}
+
+/* Respect reduced-motion preference site-wide as a baseline safety net.
+   Individual components also gate their JS-driven animation via useReducedMotion(). */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
