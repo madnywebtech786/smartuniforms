@@ -1,14 +1,15 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { motion, useScroll, useMotionValueEvent } from "motion/react";
+import { motion } from "motion/react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import Image from "next/image";
 import Container from "@/components/shared/Container";
+import TopBar from "@/components/navigation/TopBar";
 import ProductsMegaMenu from "@/components/navigation/ProductsMegaMenu";
 import MobileNav from "@/components/navigation/MobileNav";
 
-const NAV_LINKS = [{ href: "/about", label: "About" }];
+const NAV_LINKS = [{ href: "/", label: "Home" },{ href: "/about", label: "About" }];
 const POST_PRODUCTS_LINKS = [{ href: "/contact", label: "Contact" }];
 
 // How long the mega-menu stays open after the pointer leaves both the
@@ -17,25 +18,14 @@ const POST_PRODUCTS_LINKS = [{ href: "/contact", label: "Contact" }];
 const CLOSE_DELAY_MS = 300;
 
 /**
- * Transparent-over-hero header that solidifies once the user scrolls past
- * the hero. Reads scroll position via Motion's useScroll rather than a
- * scroll event listener, avoiding extra re-renders.
- *
- * Only the homepage ("/") actually has a hero image for the header to
- * float over — every other route renders the header solid immediately,
- * since there's no hero backdrop there and a see-through header at
- * scrollY 0 would just look transparent against plain page background.
+ * Two-tier sticky header: a white contact topbar (phone/email/Facebook,
+ * desktop only) stacked above a solid black primary nav (logo + links).
+ * Both are always solid — no transparent-over-hero state — since the
+ * hero now renders its own dark-overlaid background image behind the
+ * header, and a black nav over a black-overlaid hero needs a visible
+ * border to read as a separate bar rather than blending into it.
  */
 export default function SiteHeader() {
-  const pathname = usePathname();
-  const hasHero = pathname === "/";
-  const [isScrolled, setIsScrolled] = useState(!hasHero);
-  const { scrollY } = useScroll();
-
-  useMotionValueEvent(scrollY, "change", (latest) => {
-    setIsScrolled(!hasHero || latest > 64);
-  });
-
   const [isMegaMenuOpen, setIsMegaMenuOpen] = useState(false);
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
   const closeTimer = useRef(null);
@@ -59,86 +49,85 @@ export default function SiteHeader() {
   };
 
   return (
-    <motion.header
-      onMouseLeave={scheduleMegaMenuClose}
-      className="fixed inset-x-0 top-0 z-50 transition-colors duration-500"
-      style={{
-        backgroundColor: isScrolled || isMegaMenuOpen ? "var(--color-background)" : "transparent",
-        borderBottom:
-          isScrolled || isMegaMenuOpen ? "1px solid var(--color-border)" : "1px solid transparent",
-      }}
-    >
-      <Container className="flex h-20 items-center justify-between">
-        <Link
-          href="/"
-          className="font-sans text-[15px] font-semibold uppercase tracking-[0.04em] text-foreground"
-        >
-          Smart Uniform
-          <span className="text-primary">.</span>
-        </Link>
+    <header onMouseLeave={scheduleMegaMenuClose} className="fixed inset-x-0 top-0 z-50">
+      <TopBar />
 
-        <nav aria-label="Primary" className="hidden items-center gap-9 lg:flex">
-          {NAV_LINKS.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              onMouseEnter={scheduleMegaMenuClose}
-              onFocus={scheduleMegaMenuClose}
-              className="group relative font-sans text-sm font-medium text-foreground/80 transition-colors hover:text-foreground"
-            >
-              {link.label}
-              <span className="absolute -bottom-1 left-0 h-px w-0 bg-primary transition-[width] duration-300 ease-out group-hover:w-full" />
-            </Link>
-          ))}
+      <div className="bg-foreground">
+        <Container className="flex h-20 items-center justify-between">
+          <Link href="/" className="relative h-9 w-32 shrink-0 sm:h-10 sm:w-36">
+            <Image
+              src="/images/logo.png"
+              alt="Smart Uniform and Embroidery"
+              fill
+              sizes="144px"
+              className="object-contain object-left"
+              priority
+            />
+          </Link>
 
-          <div onMouseEnter={openMegaMenu} onFocus={openMegaMenu}>
-            <Link
-              href="/products"
-              onClick={closeMegaMenu}
-              aria-expanded={isMegaMenuOpen}
-              className="group relative font-sans text-sm font-medium text-foreground/80 transition-colors hover:text-foreground"
-            >
-              Products
-              <span
-                className={`absolute -bottom-1 left-0 h-px bg-primary transition-[width] duration-300 ease-out ${
-                  isMegaMenuOpen ? "w-full" : "w-0 group-hover:w-full"
-                }`}
-              />
-            </Link>
-          </div>
+          <nav aria-label="Primary" className="hidden items-center gap-9 lg:flex">
+            {NAV_LINKS.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                onMouseEnter={scheduleMegaMenuClose}
+                onFocus={scheduleMegaMenuClose}
+                className="group relative font-sans text-sm font-medium text-background/80 transition-colors hover:text-background"
+              >
+                {link.label}
+                <span className="absolute -bottom-1 left-0 h-px w-0 bg-primary transition-[width] duration-300 ease-out group-hover:w-full" />
+              </Link>
+            ))}
 
-          {POST_PRODUCTS_LINKS.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              onMouseEnter={scheduleMegaMenuClose}
-              onFocus={scheduleMegaMenuClose}
-              className="group relative font-sans text-sm font-medium text-foreground/80 transition-colors hover:text-foreground"
-            >
-              {link.label}
-              <span className="absolute -bottom-1 left-0 h-px w-0 bg-primary transition-[width] duration-300 ease-out group-hover:w-full" />
-            </Link>
-          ))}
-        </nav>
+            <div onMouseEnter={openMegaMenu} onFocus={openMegaMenu}>
+              <Link
+                href="/products"
+                onClick={closeMegaMenu}
+                aria-expanded={isMegaMenuOpen}
+                className="group relative font-sans text-sm font-medium text-background/80 transition-colors hover:text-background"
+              >
+                Products
+                <span
+                  className={`absolute -bottom-1 left-0 h-px bg-primary transition-[width] duration-300 ease-out ${
+                    isMegaMenuOpen ? "w-full" : "w-0 group-hover:w-full"
+                  }`}
+                />
+              </Link>
+            </div>
 
-        <Link
-          href="/contact"
-          className="hidden rounded-full bg-foreground px-5 py-2.5 font-sans text-sm font-semibold text-background transition-colors duration-300 hover:bg-primary hover:text-primary-foreground lg:inline-block"
-        >
-          Request a Quote
-        </Link>
+            {POST_PRODUCTS_LINKS.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                onMouseEnter={scheduleMegaMenuClose}
+                onFocus={scheduleMegaMenuClose}
+                className="group relative font-sans text-sm font-medium text-background/80 transition-colors hover:text-background"
+              >
+                {link.label}
+                <span className="absolute -bottom-1 left-0 h-px w-0 bg-primary transition-[width] duration-300 ease-out group-hover:w-full" />
+              </Link>
+            ))}
+          </nav>
 
-        <MobileNavToggle
-          isOpen={isMobileNavOpen}
-          onOpen={() => setIsMobileNavOpen(true)}
-          onClose={closeMobileNav}
-        />
-      </Container>
+          <Link
+            href="/contact"
+            className="hidden rounded-full bg-primary px-5 py-2.5 font-sans text-sm font-semibold text-primary-foreground transition-colors duration-300 hover:bg-primary-deep lg:inline-block"
+          >
+            Request a Quote
+          </Link>
 
-      <div onMouseEnter={openMegaMenu}>
-        <ProductsMegaMenu isOpen={isMegaMenuOpen} onNavigate={closeMegaMenu} />
+          <MobileNavToggle
+            isOpen={isMobileNavOpen}
+            onOpen={() => setIsMobileNavOpen(true)}
+            onClose={closeMobileNav}
+          />
+        </Container>
+
+        <div onMouseEnter={openMegaMenu}>
+          <ProductsMegaMenu isOpen={isMegaMenuOpen} onNavigate={closeMegaMenu} />
+        </div>
       </div>
-    </motion.header>
+    </header>
   );
 }
 
@@ -150,19 +139,19 @@ function MobileNavToggle({ isOpen, onOpen, onClose }) {
         onClick={isOpen ? onClose : onOpen}
         aria-label={isOpen ? "Close menu" : "Open menu"}
         aria-expanded={isOpen}
-        className="flex h-10 w-10 items-center justify-center rounded-full border border-border lg:hidden"
+        className="relative z-50 flex h-10 w-10 items-center justify-center rounded-full border border-background/25 lg:hidden"
       >
         <span className="sr-only">Menu</span>
         <div className="flex flex-col gap-1.5">
           <motion.span
             animate={{ rotate: isOpen ? 45 : 0, y: isOpen ? 3.5 : 0 }}
             transition={{ duration: 0.2 }}
-            className="h-px w-5 bg-foreground"
+            className="h-px w-5 bg-background"
           />
           <motion.span
             animate={{ rotate: isOpen ? -45 : 0, y: isOpen ? -3.5 : 0 }}
             transition={{ duration: 0.2 }}
-            className="h-px w-5 bg-foreground"
+            className="h-px w-5 bg-background"
           />
         </div>
       </button>

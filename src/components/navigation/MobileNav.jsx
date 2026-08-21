@@ -3,12 +3,12 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import Link from "next/link";
-import { Plus } from "lucide-react";
+import { Plus, X } from "lucide-react";
 import { PRODUCTS } from "@/lib/products";
 import { CATALOG_ITEMS } from "@/lib/catalog";
 import { EASE_CINEMATIC as EASE } from "@/lib/motion";
 
-const STATIC_LINKS = [{ href: "/about", label: "About" }];
+const STATIC_LINKS = [{ href: "/", label: "Home" },{ href: "/about", label: "About" }];
 const POST_PRODUCTS_LINKS = [{ href: "/contact", label: "Contact" }];
 
 /**
@@ -42,9 +42,20 @@ export default function MobileNav({ isOpen, onClose }) {
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ duration: 0.4, ease: EASE }}
-            className="fixed inset-y-0 right-0 z-40 flex w-full max-w-sm flex-col overflow-y-auto bg-background pt-24 pb-10 lg:hidden"
+            className="fixed inset-y-0 right-0 z-40 flex w-full max-w-sm flex-col overflow-y-auto bg-background pt-6 pb-10 lg:hidden"
           >
-            <nav aria-label="Primary" className="flex flex-col px-6">
+            <div className="flex justify-end px-6">
+              <button
+                type="button"
+                onClick={onClose}
+                aria-label="Close menu"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-border text-foreground"
+              >
+                <X strokeWidth={1.75} className="h-5 w-5" aria-hidden="true" />
+              </button>
+            </div>
+
+            <nav aria-label="Primary" className="mt-12 flex flex-col px-6">
               {STATIC_LINKS.map((link) => (
                 <Link
                   key={link.href}
