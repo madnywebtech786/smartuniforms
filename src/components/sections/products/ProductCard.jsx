@@ -6,23 +6,36 @@ import { PRODUCTS } from "@/lib/products";
 const MAX_VISIBLE_SWATCHES = 3;
 
 /**
- * One fixed-size card in the Products marquee (see Products.jsx). Every
- * card shares identical geometry — fixed photo aspect ratio, a capped
- * single-line meta row, and a swatch row sized to its own content rather
- * than stretched — so card height never varies with product copy length.
- * This is what makes the marquee's row height, and therefore the whole
- * section's height, constant regardless of which products are showing.
+ * One fixed-size card, shared by the homepage Products marquee (legacy
+ * CATALOG_ITEMS, see Products.jsx) and the /products catalog grid (real
+ * data, see lib/newProducts.js) — both product shapes flow through here,
+ * so this component tolerates either. Every card shares identical
+ * geometry — fixed photo aspect ratio, a capped single-line meta row, and
+ * a swatch row sized to its own content rather than stretched — so card
+ * height never varies with product copy length.
  *
- * No description text is rendered here on purpose: it's the
- * variable-length field (105-138 characters across today's catalog) that
- * caused the old single-card layout's height to jiggle. It still lives on
- * each CATALOG_ITEMS entry for a future /products/[slug] detail page.
+ * No description text is rendered here on purpose: it's a variable-length
+ * field that would make the marquee/grid row height jiggle. It still
+ * lives on each product entry for the /products/[slug] detail page.
+ *
+ * The eyebrow label prefers the new product's own subcategoryName (e.g.
+ * "Unisex Scrub Pant" — the garment type, not the broad parent category —
+ * see lib/newProducts.js) when present, falling back to a PRODUCTS lookup
+ * for legacy CATALOG_ITEMS, which only carry categorySlug.
+ *
+ * The meta line prefers the new flexible `specs` ({ label, value } pairs)
+ * when present, falling back to the legacy fixed sizeRange/fabricType
+ * fields — see lib/newProducts.js for why specs are flexible per category.
  */
 export default function ProductCard({ product, className = "w-64 shrink-0 sm:w-72" }) {
-  const category = PRODUCTS.find((item) => item.slug === product.categorySlug);
+  const legacyCategory = PRODUCTS.find((item) => item.slug === product.categorySlug);
+  const eyebrowLabel = product.subcategoryName ?? legacyCategory?.name ?? product.categorySlug;
   const image = STOCK_IMAGES[product.imageKey];
   const visibleColours = product.colours.slice(0, MAX_VISIBLE_SWATCHES);
   const hiddenCount = product.colours.length - visibleColours.length;
+  const metaLine = product.specs
+    ? product.specs.map((spec) => spec.value).join(" · ")
+    : `${product.sizeRange} · ${product.fabricType}`;
 
   return (
     <Link
@@ -41,15 +54,15 @@ export default function ProductCard({ product, className = "w-64 shrink-0 sm:w-7
 
       <div className="flex flex-col gap-2 border-t border-border px-4 py-4 sm:px-5">
         <p className="font-sans text-[10px] font-bold uppercase tracking-[0.14em] text-primary">
-          {category?.name ?? product.categorySlug}
+          {eyebrowLabel}
         </p>
 
         <h3 className="font-display text-lg leading-tight text-foreground sm:text-xl">
-          {product.name}
+          {product.style ?? product.name}
         </h3>
 
         <p className="truncate whitespace-nowrap border-t border-dashed border-border pt-2 font-sans text-xs text-muted-foreground">
-          {product.sizeRange} · {product.fabricType}
+          {metaLine}
         </p>
 
         <div className="flex w-fit items-center gap-1.5">

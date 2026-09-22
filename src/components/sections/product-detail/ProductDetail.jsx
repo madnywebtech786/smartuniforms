@@ -1,17 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import Link from "next/link";
-import { ChevronRight, Check } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { ArrowLeft, Check } from "lucide-react";
 import Container from "@/components/shared/Container";
 import Highlight from "@/components/shared/Highlight";
 import ThreadLine from "@/components/animations/ThreadLine";
 import ProductCard from "@/components/sections/products/ProductCard";
 import ProductGallery from "@/components/sections/product-detail/ProductGallery";
 import SpecAccordion from "@/components/sections/product-detail/SpecAccordion";
-import { CATALOG_ITEMS } from "@/lib/catalog";
-import { PRODUCTS } from "@/lib/products";
+import CareInstructions from "@/components/sections/product-detail/CareInstructions";
+import { NEW_PRODUCTS, NEW_CATEGORIES } from "@/lib/newProducts";
 import { EASE_CINEMATIC as EASE, revealUp } from "@/lib/motion";
 
 /**
@@ -21,42 +22,35 @@ import { EASE_CINEMATIC as EASE, revealUp } from "@/lib/motion";
  * colour name but not the photo, same honesty-about-placeholder-data
  * approach as the rest of the catalog.
  *
- * `category` is looked up here (not passed from the server page) because
- * PRODUCTS entries carry a `icon` field that's a Lucide component
- * reference — a function — which can't cross the server/client boundary
- * as a prop. CATALOG_ITEMS/PRODUCTS are plain static data either
- * component can import directly, so there's no need to serialize it.
+ * Reads from lib/newProducts.js (real client data), not the legacy
+ * lib/catalog.js + lib/products.js placeholder pair — see newProducts.js
+ * for why. `category` is looked up here (not passed from the server page)
+ * so this stays a plain client-side lookup over static data, consistent
+ * with how the legacy version did it.
  */
 export default function ProductDetail({ product }) {
   const prefersReducedMotion = useReducedMotion();
   const [selectedColour, setSelectedColour] = useState(product.colours[0]);
-  const category = PRODUCTS.find((entry) => entry.slug === product.categorySlug);
+  const category = NEW_CATEGORIES.find((entry) => entry.slug === product.categorySlug);
 
-  const relatedItems = CATALOG_ITEMS.filter(
-    (item) => item.categorySlug === product.categorySlug && item.slug !== product.slug
+  // When the selected colour has its own real photo (colour.imageKey —
+  // see lib/newProducts.js), show that instead of the product's default
+  // gallery, so picking a swatch actually changes the picture. Falls
+  // back to product.gallery for colours/products without a per-colour
+  // photo, which is every product except the ones with real per-colour
+  // photography extracted so far.
+  const gallery = selectedColour.imageKey ? [selectedColour.imageKey] : product.gallery;
+
+  const relatedItems = NEW_PRODUCTS.filter(
+    (item) => item.subcategorySlug === product.subcategorySlug && item.slug !== product.slug
   );
 
   return (
     <main className="bg-background pt-28 pb-20 md:pt-32 md:pb-28">
       <Container>
-        <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 font-sans text-xs text-muted-foreground">
-          <Link href="/products" className="transition-colors hover:text-foreground">
-            Products
-          </Link>
-          {category && (
-            <>
-              <ChevronRight className="h-3 w-3" strokeWidth={2} />
-              <Link
-                href={`/products?category=${category.slug}`}
-                className="transition-colors hover:text-foreground"
-              >
-                {category.name}
-              </Link>
-            </>
-          )}
-          <ChevronRight className="h-3 w-3" strokeWidth={2} />
-          <span className="text-foreground">{product.name}</span>
-        </nav>
+        <div className="mt-6">
+          <BackButton />
+        </div>
 
         <div className="mt-8 grid grid-cols-1 gap-10 lg:grid-cols-2 lg:gap-16">
           <motion.div
@@ -64,7 +58,7 @@ export default function ProductDetail({ product }) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: EASE }}
           >
-            <ProductGallery gallery={product.gallery} />
+            <ProductGallery key={gallery.join(",")} gallery={gallery} />
           </motion.div>
 
           <motion.div
@@ -72,13 +66,13 @@ export default function ProductDetail({ product }) {
             animate="show"
             variants={{ show: { transition: { staggerChildren: 0.06 } } }}
           >
-            {category && (
+            {(category || product.subcategoryName) && (
               <motion.p
                 variants={revealUp}
                 transition={{ duration: 0.4, ease: EASE }}
                 className="font-sans text-xs font-semibold uppercase tracking-[0.2em] text-primary"
               >
-                {category.name}
+                {[category?.name, product.subcategoryName].filter(Boolean).join(" > ")}
               </motion.p>
             )}
 
@@ -87,7 +81,7 @@ export default function ProductDetail({ product }) {
               transition={{ duration: 0.5, ease: EASE }}
               className="mt-3 text-balance font-display text-[clamp(2.25rem,4vw,3.25rem)] leading-[1.05] text-foreground"
             >
-              {product.name}
+              {product.style ?? product.name}
             </motion.h1>
 
             <motion.div variants={revealUp} transition={{ duration: 0.35, ease: EASE }} className="mt-4 w-20">
@@ -106,7 +100,7 @@ export default function ProductDetail({ product }) {
               <p className="font-sans text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
                 Colour <span className="ml-1 font-normal normal-case text-foreground">{selectedColour.name}</span>
               </p>
-              <div className="mt-3 flex items-center gap-2.5">
+              <div className="mt-3 flex flex-wrap items-center gap-2.5">
                 {product.colours.map((colour) => {
                   const isSelected = colour.name === selectedColour.name;
                   return (
@@ -138,18 +132,9 @@ export default function ProductDetail({ product }) {
               </div>
             </motion.div>
 
-            <motion.div
-              variants={revealUp}
-              transition={{ duration: 0.4, ease: EASE }}
-              className="mt-6 flex flex-wrap items-center gap-x-8 gap-y-2 border-y border-dashed border-border py-4"
-            >
-              <SpecStat label="Sizes" value={product.sizeRange} />
-              <SpecStat label="Gender" value={product.gender} />
-              <SpecStat label="Sleeve" value={product.sleeveLength} />
-            </motion.div>
-
             <motion.div variants={revealUp} transition={{ duration: 0.4, ease: EASE }} className="mt-6">
               <SpecAccordion product={product} />
+              <CareInstructions care={product.care} />
             </motion.div>
 
             <motion.div variants={revealUp} transition={{ duration: 0.4, ease: EASE }} className="mt-8">
@@ -169,7 +154,13 @@ export default function ProductDetail({ product }) {
               More from
             </p>
             <h2 className="mt-3 text-balance font-display text-[clamp(1.75rem,3vw,2.5rem)] leading-[1.05] text-foreground">
-              {category ? <Highlight>{category.name}</Highlight> : "This category"}
+              {product.subcategoryName ? (
+                <Highlight>{product.subcategoryName}</Highlight>
+              ) : category ? (
+                <Highlight>{category.name}</Highlight>
+              ) : (
+                "This category"
+              )}
             </h2>
             <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 md:gap-5">
               {relatedItems.map((item) => (
@@ -183,14 +174,39 @@ export default function ProductDetail({ product }) {
   );
 }
 
-function SpecStat({ label, value }) {
+// Back button, replacing the old breadcrumb trail. Prefers router.back()
+// so a visitor who arrived from a filtered/searched /products?... view
+// lands back on that exact result set (filters live in the URL, see
+// ProductCatalog.jsx) rather than a plain Link href="/products" resetting
+// them. Falls back to a normal link when there's no in-app catalog visit
+// to go back to (e.g. landing here directly from an external link or a
+// new tab), since router.back() would otherwise leave the site or land
+// somewhere unrelated.
+function BackButton() {
+  const router = useRouter();
+  const [cameFromCatalog, setCameFromCatalog] = useState(false);
+
+  useEffect(() => {
+    setCameFromCatalog(sessionStorage.getItem("cameFromCatalog") === "1");
+  }, []);
+
+  const className =
+    "group inline-flex items-center gap-2 font-sans text-sm font-medium text-muted-foreground transition-colors duration-200 hover:text-foreground";
+
+  if (cameFromCatalog) {
+    return (
+      <button type="button" onClick={() => router.back()} className={className}>
+        <ArrowLeft className="h-4 w-4 transition-transform duration-200 group-hover:-translate-x-0.5" strokeWidth={2} />
+        Back
+      </button>
+    );
+  }
+
   return (
-    <div>
-      <p className="font-sans text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-        {label}
-      </p>
-      <p className="mt-1 font-sans text-sm font-medium text-foreground">{value}</p>
-    </div>
+    <Link href="/products" className={className}>
+      <ArrowLeft className="h-4 w-4 transition-transform duration-200 group-hover:-translate-x-0.5" strokeWidth={2} />
+      Back to Products
+    </Link>
   );
 }
 

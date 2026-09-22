@@ -11,6 +11,14 @@ import { EASE_CINEMATIC as EASE } from "@/lib/motion";
  * Crossfades the main image on thumbnail selection rather than hard-cutting
  * — both the outgoing and incoming image stay mounted only long enough to
  * blend, via AnimatePresence's default (not "wait") mode.
+ *
+ * `activeKey` only initializes from `gallery[0]` once, on mount — it
+ * won't notice a later change to the `gallery` prop on its own. The
+ * caller (ProductDetail.jsx) can pass a different gallery when the
+ * selected colour swatch has its own photo, so it keys this component by
+ * `gallery.join(",")` to force a remount (and a fresh `activeKey`)
+ * whenever that happens, rather than adding a useEffect here to sync
+ * state from a prop.
  */
 export default function ProductGallery({ gallery }) {
   const prefersReducedMotion = useReducedMotion();
@@ -19,7 +27,7 @@ export default function ProductGallery({ gallery }) {
 
   return (
     <div className="lg:sticky lg:top-28 lg:h-fit">
-      <div className="relative aspect-4/3 w-full overflow-hidden rounded-2xl border border-border">
+      <div className="relative aspect-4/5 w-full overflow-hidden rounded-2xl border border-border bg-surface">
         <AnimatePresence initial={false}>
           <motion.div
             key={activeKey}
@@ -35,7 +43,7 @@ export default function ProductGallery({ gallery }) {
               fill
               sizes="(min-width: 1024px) 50vw, 100vw"
               priority={activeKey === gallery[0]}
-              className="object-cover"
+              className="object-contain"
             />
           </motion.div>
         </AnimatePresence>

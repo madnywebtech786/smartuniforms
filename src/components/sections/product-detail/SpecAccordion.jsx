@@ -1,66 +1,35 @@
-"use client";
-
-import { useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
-import { Plus } from "lucide-react";
-import { EASE_CINEMATIC as EASE } from "@/lib/motion";
-
 /**
- * Product spec accordion — same numbered/expand visual language as
- * ProductFilters.jsx's facet list, reused here rather than inventing a
- * second accordion pattern for the same site.
+ * Product spec list — always-visible rows, same numbered-index visual
+ * grammar as WhyChooseUs.jsx (font-display "01/02/03" markers, divided
+ * rows) rather than a click-to-expand accordion: every spec should be
+ * readable at a glance on a page whose whole job is showing a garment's
+ * details, not hiding them behind an interaction.
+ *
+ * Renders whatever `product.specs` ({ label, value } pairs) the item
+ * carries rather than assuming fixed fields — different categories have
+ * genuinely different attributes (a cap has no sleeve length, a polo has
+ * no size for the strap).
  */
 export default function SpecAccordion({ product }) {
-  const sections = [
-    { label: "Fabric & Features", body: product.fabricType },
-    { label: "Size & Fit", body: `${product.sizeRange} · ${product.garmentType}, ${product.sleeveLength.toLowerCase()}.` },
-    { label: "Garment Care", body: product.garmentCare },
-  ];
+  const sections = product.specs ?? [];
 
-  const [openLabel, setOpenLabel] = useState(sections[0].label);
+  if (sections.length === 0) return null;
 
   return (
-    <div className="divide-y divide-border border-t border-border">
-      {sections.map((section, index) => {
-        const isOpen = openLabel === section.label;
-        return (
-          <div key={section.label}>
-            <button
-              type="button"
-              onClick={() => setOpenLabel(isOpen ? null : section.label)}
-              aria-expanded={isOpen}
-              className="flex w-full items-center gap-4 py-4 text-left"
-            >
-              <span className="font-display text-sm leading-none text-primary">
-                {String(index + 1).padStart(2, "0")}
-              </span>
-              <span className="flex-1 font-sans text-sm font-semibold text-foreground">{section.label}</span>
-              <Plus
-                strokeWidth={1.75}
-                className={`h-4 w-4 shrink-0 text-foreground/60 transition-transform duration-300 ${
-                  isOpen ? "rotate-45" : ""
-                }`}
-              />
-            </button>
-
-            <AnimatePresence initial={false}>
-              {isOpen && (
-                <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: "auto", opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.3, ease: EASE }}
-                  className="overflow-hidden"
-                >
-                  <p className="pb-4 pl-8 font-sans text-sm leading-relaxed text-muted-foreground">
-                    {section.body}
-                  </p>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-        );
-      })}
-    </div>
+    <dl className="divide-y divide-border border-t border-border">
+      {sections.map((section, index) => (
+        <div key={section.label} className="flex items-baseline gap-4 py-4">
+          <span className="font-display text-sm leading-none text-primary">
+            {String(index + 1).padStart(2, "0")}
+          </span>
+          <dt className="w-28 shrink-0 font-sans text-sm font-semibold text-foreground">
+            {section.label}
+          </dt>
+          <dd className="font-sans text-sm leading-relaxed text-muted-foreground">
+            {section.value}
+          </dd>
+        </div>
+      ))}
+    </dl>
   );
 }

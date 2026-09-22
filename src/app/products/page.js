@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import Container from "@/components/shared/Container";
 import Highlight from "@/components/shared/Highlight";
 import ThreadLine from "@/components/animations/ThreadLine";
@@ -28,7 +29,9 @@ export default function ProductsPage() {
         </p>
       </Container>
 
-      <ProductCatalog />
+      <Suspense fallback={null}>
+        <ProductCatalog />
+      </Suspense>
     </main>
   );
 }

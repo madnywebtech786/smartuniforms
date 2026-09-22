@@ -1,16 +1,49 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence, useReducedMotion } from "motion/react";
-import { X, SlidersHorizontal } from "lucide-react";
+import { X, SlidersHorizontal, Search } from "lucide-react";
 import Container from "@/components/shared/Container";
 import ProductCard from "@/components/sections/products/ProductCard";
-import { CATALOG_ITEMS } from "@/lib/catalog";
+import { NEW_PRODUCTS } from "@/lib/newProducts";
 import { EASE_CINEMATIC as EASE, revealUp } from "@/lib/motion";
-import { FACETS, matchesFilters } from "@/components/sections/product-catalog/filters";
+import { FACETS, matchesFilters, matchesSearch } from "@/components/sections/product-catalog/filters";
 import ProductFilters from "@/components/sections/product-catalog/ProductFilters";
 
 const EMPTY_FILTERS = Object.fromEntries(FACETS.map((facet) => [facet.key, []]));
+
+const PAGE_SIZE = 15;
+const SEARCH_PARAM = "q";
+
+/**
+ * Reads active filters + search query out of the URL's query string, so a
+ * link to /products?category=...&q=... (e.g. from a product detail page's
+ * "Products" breadcrumb, or a bookmarked/shared filtered view) opens with
+ * that exact selection already applied, instead of always starting from
+ * EMPTY_FILTERS. Each facet gets its own query param named after the
+ * facet's key; values are comma-separated since a facet can have several
+ * selections at once.
+ */
+function filtersFromSearchParams(searchParams) {
+  const filters = { ...EMPTY_FILTERS };
+  for (const facet of FACETS) {
+    const raw = searchParams.get(facet.key);
+    filters[facet.key] = raw ? raw.split(",").filter(Boolean) : [];
+  }
+  return filters;
+}
+
+function buildQueryString(filters, searchQuery) {
+  const params = new URLSearchParams();
+  for (const facet of FACETS) {
+    const values = filters[facet.key];
+    if (values.length > 0) params.set(facet.key, values.join(","));
+  }
+  if (searchQuery.trim()) params.set(SEARCH_PARAM, searchQuery);
+  const query = params.toString();
+  return query ? `?${query}` : "";
+}
 
 /**
  * Owns the catalog's filter state and composes the sidebar + result grid.
@@ -18,38 +51,112 @@ const EMPTY_FILTERS = Object.fromEntries(FACETS.map((facet) => [facet.key, []]))
  * the page shell around it (app/products/page.js) stays a server
  * component so the route's static shell still renders on the server.
  *
- * Filtering is a plain client-side array filter over CATALOG_ITEMS — the
- * whole catalog is 6 items today, so there's no case for query params,
- * pagination, or a search index yet. Revisit once the real catalog size
- * is known.
+ * Filtering is a plain client-side array filter over NEW_PRODUCTS (real
+ * client data, see lib/newProducts.js) — the catalog is under 100 items
+ * today, so there's no case for a real search index yet. Revisit once the
+ * real catalog size is known.
+ *
+ * Search and facet filters combine (AND) via matchesSearch/matchesFilters
+ * in filters.js — a query narrows within whatever the sidebar has already
+ * selected, rather than being a second, separate way to filter.
+ *
+ * Active filters + search query live in the URL's query string (see
+ * filtersFromSearchParams/buildQueryString below), not local useState —
+ * so navigating to a product's detail page and back (browser back, or the
+ * detail page's "Products" breadcrumb, see ProductDetail.jsx's
+ * BackToProductsLink) restores the exact filtered/searched view instead of
+ * resetting to an empty catalog. Filter/search changes use router.replace
+ * (not push) so narrowing results doesn't spam browser history with one
+ * entry per click.
+ *
+ * Results are shown 15 at a time ("Show More" click reveals 15 more)
+ * rather than all at once or real pagination — simplest way to keep the
+ * initial grid short with a catalog this size, and avoids page-number UI
+ * for a flat, single-page browse. `visibleCount` resets to PAGE_SIZE
+ * whenever the filtered/searched result set changes (new filter, new
+ * search query) so a narrower result never opens already scrolled past
+ * its own first page.
  */
 export default function ProductCatalog() {
   const prefersReducedMotion = useReducedMotion();
-  const [activeFilters, setActiveFilters] = useState(EMPTY_FILTERS);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const activeFilters = useMemo(() => filtersFromSearchParams(searchParams), [searchParams]);
+  const searchQuery = searchParams.get(SEARCH_PARAM) ?? "";
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+
+  // Marks that this browser tab has an in-app catalog visit in its
+  // history, so a product detail page's "Products" breadcrumb
+  // (BackToProductsLink in ProductDetail.jsx) knows router.back() will
+  // land here rather than off-site — see that component for why a plain
+  // Link isn't enough on its own.
+  useEffect(() => {
+    sessionStorage.setItem("cameFromCatalog", "1");
+  }, []);
 
   const results = useMemo(
-    () => CATALOG_ITEMS.filter((item) => matchesFilters(item, activeFilters)),
-    [activeFilters]
+    () =>
+      NEW_PRODUCTS.filter(
+        (item) => matchesFilters(item, activeFilters) && matchesSearch(item, searchQuery)
+      ),
+    [activeFilters, searchQuery]
   );
+
+  const visibleResults = results.slice(0, visibleCount);
+  const hasMore = visibleCount < results.length;
 
   const activeCount = Object.values(activeFilters).reduce((sum, values) => sum + values.length, 0);
 
+  // Replaces (not pushes) the URL on every filter/search change, so
+  // narrowing results doesn't fill browser history with one entry per
+  // click — only the final selection is a history entry, which is what
+  // the back button from a product detail page should land back on.
+  const navigate = useCallback(
+    (nextFilters, nextSearchQuery) => {
+      router.replace(`/products${buildQueryString(nextFilters, nextSearchQuery)}`, { scroll: false });
+    },
+    [router]
+  );
+
   const toggleValue = (facetKey, value) => {
-    setActiveFilters((current) => {
-      const selected = current[facetKey];
-      const next = selected.includes(value)
-        ? selected.filter((entry) => entry !== value)
-        : [...selected, value];
-      return { ...current, [facetKey]: next };
-    });
+    const selected = activeFilters[facetKey];
+    const nextValues = selected.includes(value)
+      ? selected.filter((entry) => entry !== value)
+      : [...selected, value];
+    navigate({ ...activeFilters, [facetKey]: nextValues }, searchQuery);
+    setVisibleCount(PAGE_SIZE);
   };
 
-  const clearAll = () => setActiveFilters(EMPTY_FILTERS);
+  const clearAll = () => {
+    navigate(EMPTY_FILTERS, "");
+    setVisibleCount(PAGE_SIZE);
+  };
+
+  const handleSearchChange = (event) => {
+    navigate(activeFilters, event.target.value);
+    setVisibleCount(PAGE_SIZE);
+  };
 
   return (
     <Container as="div" className="py-10 md:py-14">
-      <div className="flex items-center justify-between gap-4 lg:hidden">
+      <div className="relative">
+        <Search
+          className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+          strokeWidth={1.75}
+        />
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={handleSearchChange}
+          placeholder="Search by name, style code, or colour…"
+          aria-label="Search garments"
+          className="w-full rounded-full border border-border bg-surface py-3 pl-11 pr-4 font-sans text-sm text-foreground outline-none transition-colors duration-200 placeholder:text-muted-foreground/60 focus:border-primary"
+        />
+      </div>
+
+      <div className="mt-6 flex items-center justify-between gap-4 lg:hidden">
         <p className="font-sans text-sm text-muted-foreground">
           {results.length} {results.length === 1 ? "garment" : "garments"}
         </p>
@@ -68,16 +175,14 @@ export default function ProductCatalog() {
         </button>
       </div>
 
-      <div className="mt-6 grid grid-cols-1 gap-10 lg:mt-0 lg:grid-cols-[260px_1fr] lg:gap-12">
+      <div className="mt-6 grid grid-cols-1 gap-10 lg:mt-8 lg:grid-cols-[260px_1fr] lg:gap-12">
         <aside className="hidden lg:block">
-          <div className="lg:sticky lg:top-28">
-            <ProductFilters
-              activeFilters={activeFilters}
-              activeCount={activeCount}
-              onToggle={toggleValue}
-              onClearAll={clearAll}
-            />
-          </div>
+          <ProductFilters
+            activeFilters={activeFilters}
+            activeCount={activeCount}
+            onToggle={toggleValue}
+            onClearAll={clearAll}
+          />
         </aside>
 
         <div>
@@ -86,21 +191,38 @@ export default function ProductCatalog() {
           </p>
 
           {results.length === 0 ? (
-            <EmptyState onClearAll={clearAll} />
+            <EmptyState onClearAll={clearAll} hasSearch={searchQuery.trim().length > 0} />
           ) : (
-            <motion.div
-              key={results.map((item) => item.slug).join(",")}
-              initial={prefersReducedMotion ? false : "hidden"}
-              animate="show"
-              variants={{ show: { transition: { staggerChildren: 0.05 } } }}
-              className="mt-6 grid grid-cols-2 gap-3 sm:gap-5 md:grid-cols-3 lg:mt-8"
-            >
-              {results.map((product) => (
-                <motion.div key={product.slug} variants={revealUp} transition={{ duration: 0.4, ease: EASE }}>
-                  <ProductCard product={product} className="w-full" />
-                </motion.div>
-              ))}
-            </motion.div>
+            <>
+              <motion.div
+                key={results.map((item) => item.slug).join(",")}
+                initial={prefersReducedMotion ? false : "hidden"}
+                animate="show"
+                variants={{ show: { transition: { staggerChildren: 0.05 } } }}
+                className="mt-6 grid grid-cols-2 gap-3 sm:gap-5 md:grid-cols-3 lg:mt-8"
+              >
+                {visibleResults.map((product) => (
+                  <motion.div key={product.slug} variants={revealUp} transition={{ duration: 0.4, ease: EASE }}>
+                    <ProductCard product={product} className="w-full" />
+                  </motion.div>
+                ))}
+              </motion.div>
+
+              {hasMore && (
+                <div className="mt-10 flex justify-center">
+                  <button
+                    type="button"
+                    onClick={() => setVisibleCount((current) => current + PAGE_SIZE)}
+                    className="group rounded-full bg-primary px-8 py-3 font-sans text-sm font-semibold text-primary-foreground transition-colors duration-300 hover:bg-foreground hover:text-white"
+                  >
+                    Show More
+                    <span className="ml-2 text-primary-foreground/70 transition-colors duration-300 group-hover:text-white/70">
+                      ({visibleResults.length} of {results.length})
+                    </span>
+                  </button>
+                </div>
+              )}
+            </>
           )}
         </div>
       </div>
@@ -121,13 +243,16 @@ export default function ProductCatalog() {
   );
 }
 
-function EmptyState({ onClearAll }) {
+function EmptyState({ onClearAll, hasSearch }) {
   return (
     <div className="mt-6 flex flex-col items-start gap-4 border-t border-dashed border-border py-16 lg:mt-8">
-      <p className="font-display text-2xl text-foreground">No garments match those filters.</p>
+      <p className="font-display text-2xl text-foreground">
+        {hasSearch ? "No garments match that search." : "No garments match those filters."}
+      </p>
       <p className="max-w-sm font-sans text-sm leading-relaxed text-muted-foreground">
-        Try clearing a filter or two — our full catalog spans administration, health, security,
-        industrial, and hospitality wear.
+        {hasSearch
+          ? "Try a different name, style code, or colour, or clear your search to see the rest of the catalog."
+          : "Try clearing a filter or two to see the rest of the catalog."}
       </p>
       <button
         type="button"

@@ -42,3 +42,6 @@ next-env.d.ts
 
 # brainstorming companion
 .superpowers/
+/public/images/extracted
+/public/images/smart-uniforms/
+.gitkeep

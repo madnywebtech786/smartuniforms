@@ -1,14 +1,14 @@
 import { notFound } from "next/navigation";
-import { CATALOG_ITEMS } from "@/lib/catalog";
+import { NEW_PRODUCTS } from "@/lib/newProducts";
 import ProductDetail from "@/components/sections/product-detail/ProductDetail";
 
 export function generateStaticParams() {
-  return CATALOG_ITEMS.map((item) => ({ slug: item.slug }));
+  return NEW_PRODUCTS.map((item) => ({ slug: item.slug }));
 }
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
-  const product = CATALOG_ITEMS.find((item) => item.slug === slug);
+  const product = NEW_PRODUCTS.find((item) => item.slug === slug);
   if (!product) return {};
 
   return {
@@ -19,7 +19,7 @@ export async function generateMetadata({ params }) {
 
 export default async function ProductDetailPage({ params }) {
   const { slug } = await params;
-  const product = CATALOG_ITEMS.find((item) => item.slug === slug);
+  const product = NEW_PRODUCTS.find((item) => item.slug === slug);
   if (!product) notFound();
 
   return <ProductDetail product={product} />;

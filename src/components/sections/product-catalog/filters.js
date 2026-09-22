@@ -1,57 +1,68 @@
-import { PRODUCTS } from "@/lib/products";
-import { CATALOG_ITEMS } from "@/lib/catalog";
+import { NEW_PRODUCTS, NEW_CATEGORIES } from "@/lib/newProducts";
 
 /**
  * Facet definitions for the /products catalog filter sidebar. Each facet
- * reads its option list directly from CATALOG_ITEMS/PRODUCTS rather than
- * a hardcoded list, so adding a new item or category automatically
+ * reads its option list directly from NEW_PRODUCTS rather than a
+ * hardcoded list, so adding a new item or subcategory automatically
  * surfaces as a filter option with no changes needed here.
  *
- * Deliberately 5 facets, not the reference site's 6: fabricType is a
- * unique free-text spec per item (faceting it would produce one filter
- * per item), and this business manufactures in-house rather than
- * reselling third-party lines, so "Brand" has no real referent — both
- * were dropped rather than faked. See catalog.js for the full rationale.
+ * The Category facet still filters on subcategorySlug (e.g. "Unisex
+ * Scrub Pant"), not the parent NEW_CATEGORIES entry (e.g. "Health
+ * Wear") — a style code only means something next to its garment type.
+ * But with 6 parent categories and 23 subcategories, a flat subcategory
+ * list is no longer scannable, so `options` is now grouped: each entry
+ * is a parent category carrying its own `subcategories` array, rather
+ * than one flat list of 23 rows. ProductFilters.jsx renders this as a
+ * nested accordion (parent expands to reveal its subcategory
+ * checkboxes) instead of the single-level list used before. Selection
+ * still stores subcategorySlug values (matchesFilters is unchanged) —
+ * only the sidebar's grouping/presentation changed.
+ *
+ * Only Category and Colour are faceted here, unlike the legacy
+ * placeholder catalog's 5 fixed facets: real items carry a flexible
+ * `specs` list rather than shared fields like gender/garmentType/
+ * sleeveLength (see lib/newProducts.js), so there's no fixed field to
+ * facet on yet. Revisit once enough real categories exist to know which
+ * spec labels are common enough across items to facet on.
  */
 export const FACETS = [
   {
-    key: "categorySlug",
+    key: "subcategorySlug",
     label: "Category",
-    options: PRODUCTS.map((category) => ({ value: category.slug, label: category.name })),
+    isGrouped: true,
+    options: groupSubcategoriesByCategory(NEW_PRODUCTS),
   },
   {
     key: "colours",
     label: "Colour",
     isMultiValue: true,
-    options: dedupeColours(CATALOG_ITEMS),
-  },
-  {
-    key: "gender",
-    label: "Gender",
-    options: uniqueValues(CATALOG_ITEMS, "gender"),
-  },
-  {
-    key: "garmentType",
-    label: "Garment Type",
-    options: uniqueValues(CATALOG_ITEMS, "garmentType"),
-  },
-  {
-    key: "sleeveLength",
-    label: "Sleeve Length",
-    options: uniqueValues(CATALOG_ITEMS, "sleeveLength"),
+    options: dedupeColours(NEW_PRODUCTS),
   },
 ];
 
-function uniqueValues(items, field) {
-  const seen = new Set();
-  const options = [];
+/**
+ * One entry per NEW_CATEGORIES parent (in NEW_CATEGORIES order), each
+ * carrying only the subcategories that actually have products, in
+ * first-seen order. A parent with zero matching products (shouldn't
+ * happen today, but cheap to guard) is dropped rather than shown empty.
+ */
+function groupSubcategoriesByCategory(items) {
+  const subcategoriesByCategory = new Map();
   for (const item of items) {
-    if (!seen.has(item[field])) {
-      seen.add(item[field]);
-      options.push({ value: item[field], label: item[field] });
+    if (!subcategoriesByCategory.has(item.categorySlug)) {
+      subcategoriesByCategory.set(item.categorySlug, new Map());
+    }
+    const subcategories = subcategoriesByCategory.get(item.categorySlug);
+    if (!subcategories.has(item.subcategorySlug)) {
+      subcategories.set(item.subcategorySlug, { value: item.subcategorySlug, label: item.subcategoryName });
     }
   }
-  return options;
+
+  return NEW_CATEGORIES.map((category) => ({
+    value: category.slug,
+    label: category.name,
+    subcategories: Array.from(subcategoriesByCategory.get(category.slug)?.values() ?? []),
+  })).filter((category) => category.subcategories.length > 0);
 }
 
 function dedupeColours(items) {
@@ -84,4 +95,23 @@ export function matchesFilters(item, activeFilters) {
 
     return selected.includes(item[facet.key]);
   });
+}
+
+/**
+ * Returns true if `item` matches a free-text search query — checked
+ * against name, style code, subcategory name, and colour names, since
+ * those are what a real query is likely to name (e.g. "SPB-122",
+ * "scrub top", "navy"). ANDs with matchesFilters in ProductCatalog.jsx,
+ * so search and facets narrow the result set together rather than as
+ * two separate ways to filter.
+ */
+export function matchesSearch(item, query) {
+  const normalized = query.trim().toLowerCase();
+  if (!normalized) return true;
+
+  const haystack = [item.name, item.style, item.subcategoryName, ...item.colours.map((colour) => colour.name)]
+    .join(" ")
+    .toLowerCase();
+
+  return haystack.includes(normalized);
 }
