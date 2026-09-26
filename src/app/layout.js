@@ -18,9 +18,9 @@ const carterOne = Carter_One({
 });
 
 export const metadata = {
-  title: "Smart Uniform and Embroidery | Custom Uniforms, Calgary",
+  title: "Smart Uniform and Embroidery | Custom Uniforms, Suva, Fiji",
   description:
-    "Smart Uniform and Embroidery designs, manufactures, and embroiders custom uniforms for hospitality, healthcare, retail, and industrial businesses across Calgary.",
+    "Smart Uniform and Embroidery designs, manufactures, and embroiders custom uniforms for hospitality, healthcare, retail, and industrial businesses across Suva, Fiji.",
 };
 
 export default function RootLayout({ children }) {

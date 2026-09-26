@@ -4,21 +4,25 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import Link from "next/link";
 import { Plus, X } from "lucide-react";
-import { PRODUCTS } from "@/lib/products";
-import { CATALOG_ITEMS } from "@/lib/catalog";
+import { FACETS } from "@/components/sections/product-catalog/filters";
 import { EASE_CINEMATIC as EASE } from "@/lib/motion";
 
+// Same grouped Category facet options the desktop mega-menu and the
+// /products sidebar both read (see filters.js) — one real category per
+// row, each expanding to its own real subcategories.
+const CATEGORY_GROUPS = FACETS[0].options;
+
 const STATIC_LINKS = [{ href: "/", label: "Home" },{ href: "/about", label: "About" }];
-const POST_PRODUCTS_LINKS = [{ href: "/contact", label: "Contact" }];
+const POST_PRODUCTS_LINKS = [{ href: "/accessories", label: "Accessories" }, { href: "/contact", label: "Contact" }];
 
 /**
  * Full-screen mobile nav drawer. Products renders as a 3-level nested
- * accordion (Products -> category -> catalog items) rather than the
+ * accordion (Products -> category -> subcategories) rather than the
  * desktop mega-menu's hover panel, since hover-intent has no mobile
  * equivalent — matches the client's ask for accordions on mobile
  * specifically. Each level tracks its own open/closed state
  * independently so a category can stay expanded while switching between
- * its sibling categories' items.
+ * its sibling categories' subcategories.
  */
 export default function MobileNav({ isOpen, onClose }) {
   return (
@@ -120,8 +124,8 @@ function ProductsAccordion({ onNavigate }) {
             className="overflow-hidden"
           >
             <ul className="flex flex-col gap-1 pb-4 pl-4">
-              {PRODUCTS.map((category) => (
-                <CategoryAccordion key={category.slug} category={category} onNavigate={onNavigate} />
+              {CATEGORY_GROUPS.map((category) => (
+                <CategoryAccordion key={category.value} category={category} onNavigate={onNavigate} />
               ))}
               <li>
                 <Link
@@ -142,7 +146,6 @@ function ProductsAccordion({ onNavigate }) {
 
 function CategoryAccordion({ category, onNavigate }) {
   const [isOpen, setIsOpen] = useState(false);
-  const items = CATALOG_ITEMS.filter((item) => item.categorySlug === category.slug);
 
   return (
     <li>
@@ -152,7 +155,7 @@ function CategoryAccordion({ category, onNavigate }) {
         aria-expanded={isOpen}
         className="flex w-full items-center justify-between py-2.5 text-left"
       >
-        <span className="font-sans text-sm font-medium text-foreground/85">{category.name}</span>
+        <span className="font-sans text-sm font-medium text-foreground/85">{category.label}</span>
         <Plus
           strokeWidth={1.75}
           className={`h-3.5 w-3.5 text-foreground/50 transition-transform duration-300 ${isOpen ? "rotate-45" : ""}`}
@@ -169,14 +172,23 @@ function CategoryAccordion({ category, onNavigate }) {
             className="overflow-hidden"
           >
             <ul className="flex flex-col gap-0.5 py-1 pl-4">
-              {items.map((item) => (
-                <li key={item.slug}>
+              <li>
+                <Link
+                  href={`/products?category=${category.value}`}
+                  onClick={onNavigate}
+                  className="block py-2 font-sans text-sm font-semibold text-primary"
+                >
+                  View all {category.label}
+                </Link>
+              </li>
+              {category.subcategories.map((subcategory) => (
+                <li key={subcategory.value}>
                   <Link
-                    href={`/products/${item.slug}`}
+                    href={`/products?subcategorySlug=${subcategory.value}`}
                     onClick={onNavigate}
                     className="block py-2 font-sans text-sm text-muted-foreground transition-colors hover:text-primary"
                   >
-                    {item.name}
+                    {subcategory.label}
                   </Link>
                 </li>
               ))}

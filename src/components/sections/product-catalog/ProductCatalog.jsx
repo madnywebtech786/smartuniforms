@@ -8,35 +8,55 @@ import Container from "@/components/shared/Container";
 import ProductCard from "@/components/sections/products/ProductCard";
 import { NEW_PRODUCTS } from "@/lib/newProducts";
 import { EASE_CINEMATIC as EASE, revealUp } from "@/lib/motion";
-import { FACETS, matchesFilters, matchesSearch } from "@/components/sections/product-catalog/filters";
+import {
+  buildFacets,
+  matchesFilters,
+  matchesSearch,
+  subcategorySlugsForCategory,
+} from "@/components/sections/product-catalog/filters";
 import ProductFilters from "@/components/sections/product-catalog/ProductFilters";
-
-const EMPTY_FILTERS = Object.fromEntries(FACETS.map((facet) => [facet.key, []]));
 
 const PAGE_SIZE = 15;
 const SEARCH_PARAM = "q";
+const CATEGORY_PARAM = "category";
 
 /**
  * Reads active filters + search query out of the URL's query string, so a
  * link to /products?category=...&q=... (e.g. from a product detail page's
  * "Products" breadcrumb, or a bookmarked/shared filtered view) opens with
  * that exact selection already applied, instead of always starting from
- * EMPTY_FILTERS. Each facet gets its own query param named after the
- * facet's key; values are comma-separated since a facet can have several
- * selections at once.
+ * an empty filter set. Each facet gets its own query param named after
+ * the facet's key; values are comma-separated since a facet can have
+ * several selections at once.
+ *
+ * `category` is a separate, broader param (not one of `facets`) for links
+ * that only know the parent NEW_CATEGORIES slug (e.g. the homepage
+ * Categories cards, the mega-menu's "View All") rather than a specific
+ * subcategorySlug — it expands to every subcategory under that parent via
+ * subcategorySlugsForCategory, merged into the subcategorySlug facet
+ * rather than replacing an explicit subcategorySlug selection.
  */
-function filtersFromSearchParams(searchParams) {
-  const filters = { ...EMPTY_FILTERS };
-  for (const facet of FACETS) {
+function filtersFromSearchParams(searchParams, facets, emptyFilters) {
+  const filters = { ...emptyFilters };
+  for (const facet of facets) {
     const raw = searchParams.get(facet.key);
     filters[facet.key] = raw ? raw.split(",").filter(Boolean) : [];
   }
+
+  const category = searchParams.get(CATEGORY_PARAM);
+  if (category) {
+    const subcategorySlugs = subcategorySlugsForCategory(category);
+    filters.subcategorySlug = Array.from(
+      new Set([...filters.subcategorySlug, ...subcategorySlugs])
+    );
+  }
+
   return filters;
 }
 
-function buildQueryString(filters, searchQuery) {
+function buildQueryString(filters, searchQuery, facets) {
   const params = new URLSearchParams();
-  for (const facet of FACETS) {
+  for (const facet of facets) {
     const values = filters[facet.key];
     if (values.length > 0) params.set(facet.key, values.join(","));
   }
@@ -48,13 +68,22 @@ function buildQueryString(filters, searchQuery) {
 /**
  * Owns the catalog's filter state and composes the sidebar + result grid.
  * A client component because filtering is inherently interactive state;
- * the page shell around it (app/products/page.js) stays a server
- * component so the route's static shell still renders on the server.
+ * the page shell around it (app/products/page.js, app/accessories/page.js)
+ * stays a server component so the route's static shell still renders on
+ * the server.
  *
- * Filtering is a plain client-side array filter over NEW_PRODUCTS (real
- * client data, see lib/newProducts.js) — the catalog is under 100 items
- * today, so there's no case for a real search index yet. Revisit once the
- * real catalog size is known.
+ * `products` defaults to the full real catalog (lib/newProducts.js) and
+ * `basePath` to "/products" — passing a narrower `products` list (e.g.
+ * /accessories passing only its own category's products) scopes both the
+ * result set AND the sidebar's facet options (via buildFacets) to that
+ * subset, while reusing the exact same search/filter/pagination UI and
+ * behavior as the full catalog. `basePath` is where filter/search changes
+ * write the URL, so a scoped catalog keeps its own route rather than
+ * silently redirecting to /products.
+ *
+ * Filtering is a plain client-side array filter — the catalog is under
+ * 100 items today, so there's no case for a real search index yet.
+ * Revisit once the real catalog size is known.
  *
  * Search and facet filters combine (AND) via matchesSearch/matchesFilters
  * in filters.js — a query narrows within whatever the sidebar has already
@@ -77,12 +106,21 @@ function buildQueryString(filters, searchQuery) {
  * search query) so a narrower result never opens already scrolled past
  * its own first page.
  */
-export default function ProductCatalog() {
+export default function ProductCatalog({ products = NEW_PRODUCTS, basePath = "/products" }) {
   const prefersReducedMotion = useReducedMotion();
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const activeFilters = useMemo(() => filtersFromSearchParams(searchParams), [searchParams]);
+  const facets = useMemo(() => buildFacets(products), [products]);
+  const emptyFilters = useMemo(
+    () => Object.fromEntries(facets.map((facet) => [facet.key, []])),
+    [facets]
+  );
+
+  const activeFilters = useMemo(
+    () => filtersFromSearchParams(searchParams, facets, emptyFilters),
+    [searchParams, facets, emptyFilters]
+  );
   const searchQuery = searchParams.get(SEARCH_PARAM) ?? "";
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
@@ -98,10 +136,10 @@ export default function ProductCatalog() {
 
   const results = useMemo(
     () =>
-      NEW_PRODUCTS.filter(
-        (item) => matchesFilters(item, activeFilters) && matchesSearch(item, searchQuery)
+      products.filter(
+        (item) => matchesFilters(item, activeFilters, facets) && matchesSearch(item, searchQuery)
       ),
-    [activeFilters, searchQuery]
+    [products, activeFilters, searchQuery, facets]
   );
 
   const visibleResults = results.slice(0, visibleCount);
@@ -115,9 +153,11 @@ export default function ProductCatalog() {
   // the back button from a product detail page should land back on.
   const navigate = useCallback(
     (nextFilters, nextSearchQuery) => {
-      router.replace(`/products${buildQueryString(nextFilters, nextSearchQuery)}`, { scroll: false });
+      router.replace(`${basePath}${buildQueryString(nextFilters, nextSearchQuery, facets)}`, {
+        scroll: false,
+      });
     },
-    [router]
+    [router, basePath, facets]
   );
 
   const toggleValue = (facetKey, value) => {
@@ -130,7 +170,7 @@ export default function ProductCatalog() {
   };
 
   const clearAll = () => {
-    navigate(EMPTY_FILTERS, "");
+    navigate(emptyFilters, "");
     setVisibleCount(PAGE_SIZE);
   };
 
@@ -178,6 +218,7 @@ export default function ProductCatalog() {
       <div className="mt-6 grid grid-cols-1 gap-10 lg:mt-8 lg:grid-cols-[260px_1fr] lg:gap-12">
         <aside className="hidden lg:block">
           <ProductFilters
+            facets={facets}
             activeFilters={activeFilters}
             activeCount={activeCount}
             onToggle={toggleValue}
@@ -231,6 +272,7 @@ export default function ProductCatalog() {
         {isMobileFiltersOpen && (
           <MobileFilterSheet onClose={() => setIsMobileFiltersOpen(false)}>
             <ProductFilters
+              facets={facets}
               activeFilters={activeFilters}
               activeCount={activeCount}
               onToggle={toggleValue}

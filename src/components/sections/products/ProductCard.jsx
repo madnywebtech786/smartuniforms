@@ -6,13 +6,15 @@ import { PRODUCTS } from "@/lib/products";
 const MAX_VISIBLE_SWATCHES = 3;
 
 /**
- * One fixed-size card, shared by the homepage Products marquee (legacy
- * CATALOG_ITEMS, see Products.jsx) and the /products catalog grid (real
- * data, see lib/newProducts.js) — both product shapes flow through here,
- * so this component tolerates either. Every card shares identical
- * geometry — fixed photo aspect ratio, a capped single-line meta row, and
- * a swatch row sized to its own content rather than stretched — so card
- * height never varies with product copy length.
+ * One fixed-size card, shared by the homepage Products marquee (real
+ * data, see Products.jsx's FEATURED_PRODUCTS), the /accessories grid,
+ * and the /products catalog grid (all read lib/newProducts.js) — still
+ * tolerates the legacy lib/catalog.js product shape too (categorySlug +
+ * fixed sizeRange/fabricType fields, no subcategoryName/specs) since
+ * Hero/HeroArcSlider still reference that legacy data. Every card shares
+ * identical geometry — fixed photo aspect ratio, a capped single-line
+ * meta row, and a swatch row sized to its own content rather than
+ * stretched — so card height never varies with product copy length.
  *
  * No description text is rendered here on purpose: it's a variable-length
  * field that would make the marquee/grid row height jiggle. It still
@@ -21,7 +23,7 @@ const MAX_VISIBLE_SWATCHES = 3;
  * The eyebrow label prefers the new product's own subcategoryName (e.g.
  * "Unisex Scrub Pant" — the garment type, not the broad parent category —
  * see lib/newProducts.js) when present, falling back to a PRODUCTS lookup
- * for legacy CATALOG_ITEMS, which only carry categorySlug.
+ * for the legacy shape, which only carries categorySlug.
  *
  * The meta line prefers the new flexible `specs` ({ label, value } pairs)
  * when present, falling back to the legacy fixed sizeRange/fabricType

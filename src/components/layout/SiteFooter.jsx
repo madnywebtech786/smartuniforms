@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import Container from "@/components/shared/Container";
 import { PRODUCTS } from "@/lib/products";
 
@@ -26,14 +27,19 @@ export default function SiteFooter() {
           <div className="lg:col-span-1">
             <Link
               href="/"
-              className="font-sans text-[15px] font-semibold uppercase tracking-[0.04em] text-foreground"
+              className="relative block h-16 w-36 rounded-md bg-white px-1 py-1.5"
             >
-              Smart Uniform
-              <span className="text-primary">.</span>
+              <Image
+                src="/images/smart-uniform-logo.png"
+                alt="Smart Uniform and Embroidery"
+                fill
+                sizes="144px"
+                className="object-contain"
+              />
             </Link>
             <p className="mt-4 max-w-xs font-sans text-sm leading-relaxed text-muted-foreground">
               Custom uniform manufacturing, supply, and in-house embroidery
-              for businesses across Calgary.
+              for businesses across Suva, Fiji.
             </p>
           </div>
 
@@ -79,8 +85,13 @@ export default function SiteFooter() {
             </h3>
             <ul className="mt-5 space-y-3 font-sans text-sm text-foreground/80">
               <li>
-                <a href="tel:+14036290862" className="transition-colors hover:text-primary">
-                  (403) 629-0862
+                <a href="tel:+6793395162" className="transition-colors hover:text-primary">
+                  +679 339 5162
+                </a>
+              </li>
+              <li>
+                <a href="tel:+6799705444" className="transition-colors hover:text-primary">
+                  +679 970 5444
                 </a>
               </li>
               <li>
@@ -92,9 +103,9 @@ export default function SiteFooter() {
                 </a>
               </li>
               <li className="leading-relaxed">
-                534 Redstone View NE
+                Lot 1 Shop 9, Ratu Dovi Road
                 <br />
-                Calgary, AB T3N 0M9
+                Nasinu, Suva, Fiji Islands
               </li>
             </ul>
           </div>
@@ -105,7 +116,7 @@ export default function SiteFooter() {
             © {new Date().getFullYear()} Smart Uniform and Embroidery. All rights reserved.
           </p>
           <p className="font-sans text-xs text-muted-foreground">
-            534 Redstone View NE, Calgary, AB
+            Lot 1 Shop 9, Ratu Dovi Road, Nasinu, Suva, Fiji
           </p>
         </div>
       </Container>

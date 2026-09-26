@@ -10,11 +10,8 @@ import { STOCK_IMAGES } from "@/lib/images";
 import { EASE_CINEMATIC as EASE } from "@/lib/motion";
 
 /**
- * "25+ years" is the one founding-story figure the client's own homepage
- * copy already used without tying it to a specific year — the safest of
- * the three conflicting claims in client-business-info.md §3 (1987 vs
- * 1997 vs "25+ years"). Used provisionally; replace once the client
- * confirms one accurate figure and narrative.
+ * "40+ years" is the client-confirmed figure (2026-09-26), replacing the
+ * earlier provisional "25+ years" placeholder.
  */
 export default function Story() {
   const sectionRef = useRef(null);
@@ -56,7 +53,7 @@ export default function Story() {
               transition={{ duration: 0.7, ease: EASE }}
               className="text-balance font-display text-[clamp(2.75rem,5vw,4.25rem)] leading-[1.05] text-foreground"
             >
-              25+ years of <Highlight>craft</Highlight>, not shortcuts.
+              40+ years of <Highlight>craft</Highlight>, not shortcuts.
             </motion.h1>
 
             <div className="mt-4 w-28">
@@ -79,13 +76,13 @@ export default function Story() {
               <p>
                 What started as tailoring and design know-how has grown into
                 a full-service uniform house: design, manufacturing,
-                embroidery, and sublimation, all handled in-house in Calgary.
-                No outsourcing, no vendor handoffs, no guessing who&rsquo;s
-                actually responsible for the finish on a garment.
+                embroidery, and sublimation, all handled in-house in Suva,
+                Fiji. No outsourcing, no vendor handoffs, no guessing
+                who&rsquo;s actually responsible for the finish on a garment.
               </p>
               <p>
                 Today we work with hospitals, restaurants, warehouses, and
-                dealerships across the city — different industries, same
+                dealerships across the islands — different industries, same
                 expectation: uniforms that fit properly, hold up to daily
                 wear, and represent the business wearing them.
               </p>
@@ -115,9 +112,6 @@ export default function Story() {
                 </motion.div>
                 <div className="absolute inset-0 border border-border" />
               </motion.div>
-              <p className="mt-3 font-sans text-xs text-muted-foreground">
-                {STOCK_IMAGES.aboutStory.credit}
-              </p>
             </div>
           </div>
         </div>

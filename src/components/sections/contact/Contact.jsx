@@ -17,8 +17,14 @@ const CONTACT_DETAILS = [
   {
     icon: Phone,
     label: "Call us",
-    value: "(403) 629-0862",
-    href: "tel:+14036290862",
+    value: "+679 339 5162",
+    href: "tel:+6793395162",
+  },
+  {
+    icon: Phone,
+    label: "Call us",
+    value: "+679 970 5444",
+    href: "tel:+6799705444",
   },
   {
     icon: Mail,
@@ -29,8 +35,8 @@ const CONTACT_DETAILS = [
   {
     icon: MapPin,
     label: "Visit us",
-    value: "534 Redstone View NE, Calgary, AB T3N 0M9",
-    href: "https://maps.google.com/?q=534+Redstone+View+NE+Calgary+AB+T3N+0M9",
+    value: "Lot 1 Shop 9, Ratu Dovi Road, Nasinu, Suva, Fiji Islands",
+    href: "https://maps.google.com/?q=Lot+1+Shop+9+Ratu+Dovi+Road+Nasinu+Suva+Fiji+Islands",
   },
 ];
 

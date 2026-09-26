@@ -7,9 +7,8 @@ import { EASE_CINEMATIC as EASE } from "@/lib/motion";
 
 /**
  * Final full-bleed conversion moment before the footer — gold, not dark,
- * so it doesn't visually merge into the dark Testimonials section right
- * above it. Spacious, one headline, one primary action: the closing
- * beat, not another showcase.
+ * so it stands apart from the light sections around it. Spacious, one
+ * headline, one primary action: the closing beat, not another showcase.
  */
 export default function CtaBand() {
   const prefersReducedMotion = useReducedMotion();
@@ -37,7 +36,7 @@ export default function CtaBand() {
           >
             Tell us what your team needs and we&rsquo;ll put together a
             quote — design, manufacturing, and embroidery, all handled
-            in-house in Calgary.
+            in-house in Suva, Fiji.
           </motion.p>
 
           <motion.div

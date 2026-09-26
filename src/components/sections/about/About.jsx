@@ -10,9 +10,9 @@ import { STOCK_IMAGES } from "@/lib/images";
 import { EASE_CINEMATIC as EASE, revealUp } from "@/lib/motion";
 
 const STATS = [
-  { value: "4", label: "Industries served" },
+  { value: "6", label: "Industries served" },
   { value: "In-house", label: "Manufacturing & embroidery" },
-  { value: "Calgary", label: "Locally based" },
+  { value: "Suva, Fiji", label: "Locally based" },
 ];
 
 export default function About() {
@@ -81,10 +81,6 @@ export default function About() {
                   className="h-full w-full origin-left bg-primary"
                 />
               </div>
-
-              <p className="mt-3 font-sans text-xs text-muted-foreground">
-                {STOCK_IMAGES.about.credit}
-              </p>
             </div>
           </div>
 
@@ -127,7 +123,7 @@ export default function About() {
                 never moved. What began as garment and clothing expertise has
                 grown into a full-service uniform house: design,
                 manufacturing, embroidery, and sublimation, all handled
-                in-house in Calgary.
+                in-house in Suva, Fiji.
               </p>
               <p>
                 We work with hospitals, restaurants, warehouses, and

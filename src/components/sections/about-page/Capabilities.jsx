@@ -140,9 +140,6 @@ export default function Capabilities() {
                 </motion.div>
                 <div className="absolute inset-0 border border-border" />
               </div>
-              <p className="mt-3 font-sans text-xs text-muted-foreground">
-                {STOCK_IMAGES.aboutCraft.credit}
-              </p>
             </div>
           </div>
         </div>

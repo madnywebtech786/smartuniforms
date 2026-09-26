@@ -6,12 +6,20 @@ import Container from "@/components/shared/Container";
 import Highlight from "@/components/shared/Highlight";
 import ThreadLine from "@/components/animations/ThreadLine";
 import ProductCard from "@/components/sections/products/ProductCard";
-import { CATALOG_ITEMS } from "@/lib/catalog";
+import { NEW_PRODUCTS, NEW_CATEGORIES } from "@/lib/newProducts";
 
 // Full loop duration for one full pass of the track (one copy's width).
 // Slow and ambient — this is a background-motion showcase, not a
-// discrete slide-and-hold carousel like Hero/Testimonials.
+// discrete slide-and-hold carousel like Hero.
 const LOOP_SECONDS = 34;
+
+// One real product per real catalog category (lib/newProducts.js), in
+// NEW_CATEGORIES order — a representative spread across the whole real
+// catalog rather than an arbitrary/curated pick, and it stays correct on
+// its own as products are added or removed (no slugs hardcoded here).
+const FEATURED_PRODUCTS = NEW_CATEGORIES.map((category) =>
+  NEW_PRODUCTS.find((product) => product.categorySlug === category.slug)
+).filter(Boolean);
 
 /**
  * Auto-scrolling card marquee — replaces the old single-active-card
@@ -21,7 +29,7 @@ const LOOP_SECONDS = 34;
  * ProductCard.jsx), so this section's height is constant regardless of
  * which products are visible or how long their names/specs are.
  *
- * The track renders CATALOG_ITEMS twice back-to-back and animates a
+ * The track renders FEATURED_PRODUCTS twice back-to-back and animates a
  * continuous linear x translation from 0% to -50% on an infinite loop —
  * the standard seamless-marquee technique, since the second copy picks
  * up visually exactly where the first one's translation "removes" it.
@@ -39,11 +47,10 @@ export default function Products() {
     });
   };
 
-  // Starts the loop on mount, same as every other autoplay section on
-  // this page (Hero/Testimonials start their setInterval unconditionally
-  // in a mount effect rather than gating on scroll-into-view) — this
-  // section sits below the fold but not so far that a scroll-triggered
-  // start is worth the added complexity.
+  // Starts the loop on mount, same as Hero's own autoplay (starts its
+  // setInterval unconditionally in a mount effect rather than gating on
+  // scroll-into-view) — this section sits below the fold but not so far
+  // that a scroll-triggered start is worth the added complexity.
   useEffect(() => {
     startLoop();
     return () => controls.stop();
@@ -92,7 +99,7 @@ export default function Products() {
             className="mt-5 max-w-lg font-sans text-base leading-relaxed text-muted-foreground sm:text-lg"
           >
             A running sample of what we build in-house — every piece
-            manufactured and embroidered under one roof in Calgary, ready
+            manufactured and embroidered under one roof in Suva, Fiji, ready
             to be fitted, branded, and sized for your team.
           </motion.p>
         </div>
@@ -113,7 +120,7 @@ export default function Products() {
       >
         {prefersReducedMotion ? (
           <div className="flex gap-4 overflow-x-auto px-6 pb-2 md:px-10 lg:px-16">
-            {CATALOG_ITEMS.map((product) => (
+            {FEATURED_PRODUCTS.map((product) => (
               <ProductCard key={product.slug} product={product} />
             ))}
           </div>
@@ -123,7 +130,7 @@ export default function Products() {
             animate={controls}
             initial={{ x: "0%" }}
           >
-            {[...CATALOG_ITEMS, ...CATALOG_ITEMS].map((product, index) => (
+            {[...FEATURED_PRODUCTS, ...FEATURED_PRODUCTS].map((product, index) => (
               <ProductCard key={`${product.slug}-${index}`} product={product} />
             ))}
           </motion.div>

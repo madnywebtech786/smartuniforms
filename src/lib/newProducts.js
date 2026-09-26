@@ -34,8 +34,15 @@
  * a real risk.
  */
 
+// Accessories (the Cap) is deliberately NOT listed here — it's excluded
+// from the /products catalog's Category filter and grid per client
+// request (2026-09-26), and browsable only on its own dedicated
+// /accessories page (see app/accessories/page.js, which filters
+// NEW_PRODUCTS by categorySlug directly rather than reading this list).
+// The Cap's own product record still carries categorySlug: "accessories"
+// unchanged — only this display list omits it.
 export const NEW_CATEGORIES = [
-  { slug: "accessories", name: "Accessories" },
+  { slug: "polo-and-tshirts", name: "Polo and T-Shirts" },
   { slug: "health-wear", name: "Health Wear" },
   { slug: "industrial", name: "Industrial" },
   { slug: "security", name: "Security" },
@@ -997,6 +1004,11 @@ export const NEW_PRODUCTS = [
    * context (dental office, pharmacy logos shown on the sample garments),
    * not kitchen wear.
    *
+   * UPDATE 2026-09-26: the t-shirt/polo products below were moved to a
+   * new "polo-and-tshirts" categorySlug per client request — "corporate
+   * wear" as a label now refers to a separate, currently-empty category
+   * reserved for future products, not this batch. See NEW_CATEGORIES.
+   *
    * Apron.pdf (25Aug/Apron.pdf): "4 STYLE" adjustable aprons come in
    * White and Black, each with 4 pocket configurations (no pocket / top
    * only / bottom only / top+bottom) — that's a genuine style-code-per-
@@ -1712,7 +1724,7 @@ export const NEW_PRODUCTS = [
     slug: "mens-tshirt-mts-99",
     name: "Mens T-Shirt",
     style: "MTS-99",
-    categorySlug: "corporate-wear",
+    categorySlug: "polo-and-tshirts",
     subcategorySlug: "mens-tshirt",
     subcategoryName: "Mens T-Shirt",
     colours: [
@@ -1753,7 +1765,7 @@ export const NEW_PRODUCTS = [
     slug: "womans-tshirt-wtssf-97",
     name: "Womans T-Shirt — Slim Fit",
     style: "WTSSF-97",
-    categorySlug: "corporate-wear",
+    categorySlug: "polo-and-tshirts",
     subcategorySlug: "womans-tshirt",
     subcategoryName: "Womans T-Shirt",
     colours: [
@@ -1791,7 +1803,7 @@ export const NEW_PRODUCTS = [
     slug: "unisex-polo-ups-100",
     name: "Unisex Polo Shirt",
     style: "UPS-100",
-    categorySlug: "corporate-wear",
+    categorySlug: "polo-and-tshirts",
     subcategorySlug: "unisex-polo",
     subcategoryName: "Unisex Polo Shirt",
     colours: [

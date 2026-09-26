@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Plus, Check, ChevronDown } from "lucide-react";
-import { FACETS } from "@/components/sections/product-catalog/filters";
 import { EASE_CINEMATIC as EASE } from "@/lib/motion";
 
 /**
@@ -26,8 +25,8 @@ import { EASE_CINEMATIC as EASE } from "@/lib/motion";
  * navigation and shows a count of how many of its own subcategories are
  * currently selected so a collapsed parent still communicates state.
  */
-export default function ProductFilters({ activeFilters, activeCount, onToggle, onClearAll }) {
-  const [openFacet, setOpenFacet] = useState(FACETS[0].key);
+export default function ProductFilters({ facets, activeFilters, activeCount, onToggle, onClearAll }) {
+  const [openFacet, setOpenFacet] = useState(facets[0].key);
 
   return (
     <div>
@@ -47,7 +46,7 @@ export default function ProductFilters({ activeFilters, activeCount, onToggle, o
       </div>
 
       <div className="divide-y divide-border">
-        {FACETS.map((facet, index) => {
+        {facets.map((facet, index) => {
           const isOpen = openFacet === facet.key;
           const selectedCount = activeFilters[facet.key].length;
 

@@ -138,7 +138,7 @@ export default function Hero() {
                 transition={{ duration: 0.35, ease: EASE }}
                 className="mb-7 font-sans text-sm font-semibold uppercase tracking-[0.24em] text-background/80"
               >
-                Calgary · Custom Uniforms &amp; Embroidery
+                Suva, Fiji · Custom Uniforms &amp; Embroidery
               </motion.p>
 
               <motion.h1

@@ -8,7 +8,7 @@ import CtaBand from "@/components/sections/cta/CtaBand";
 export const metadata = {
   title: "About | Smart Uniform and Embroidery",
   description:
-    "25+ years of custom uniform manufacturing and embroidery in Calgary — design, manufacturing, embroidery, and sublimation, all handled in-house.",
+    "40+ years of custom uniform manufacturing and embroidery in Suva, Fiji — design, manufacturing, embroidery, and sublimation, all handled in-house.",
 };
 
 export default function AboutPage() {

@@ -69,7 +69,7 @@ function CategoryCard({ category, index }) {
 
   return (
     <Link
-      href={`/industries/${category.slug}`}
+      href={`/products?category=${category.productsCategorySlug}`}
       className="group relative flex h-64 flex-col overflow-hidden rounded-2xl border border-border bg-surface p-5 transition-colors duration-300 hover:border-primary hover:bg-primary sm:h-72"
     >
       {/* Ghost register numeral — same "spec sheet" numbering motif used

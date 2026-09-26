@@ -9,7 +9,7 @@ import { EASE_CINEMATIC as EASE, revealUp } from "@/lib/motion";
 /**
  * Differentiators drawn from the client's existing positioning
  * (client-business-info.md §3): in-house manufacturing + embroidery +
- * sublimation under one roof, Calgary-based, quality/reliability/style.
+ * sublimation under one roof, Suva-based, quality/reliability/style.
  */
 const REASONS = [
   {
@@ -28,7 +28,7 @@ const REASONS = [
       "Precision logo application and full-colour, all-over designs that hold up to daily wear and repeated washing — not just a first-sample finish.",
   },
   {
-    title: "Calgary-based, dependable",
+    title: "Suva-based, dependable",
     description:
       "A local team you can reach directly, order after order — not a call centre or an account rep who changes every quarter.",
   },

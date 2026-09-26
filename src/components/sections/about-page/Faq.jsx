@@ -10,7 +10,7 @@ import { EASE_CINEMATIC as EASE, revealUp } from "@/lib/motion";
 
 /**
  * Confirmed-answer questions only. MOQ, turnaround time, pricing tiers,
- * service area beyond Calgary, and business hours are all
+ * service area beyond Suva, and business hours are all
  * [NEEDS CLIENT INPUT] per client-business-info.md §8 open questions —
  * deliberately excluded rather than answered with invented numbers.
  */
@@ -18,12 +18,12 @@ const FAQS = [
   {
     question: "What industries do you make uniforms for?",
     answer:
-      "Administration and office wear, health wear, security, industrial, and hospitality — six categories in total, each designed around what that team actually does during a shift.",
+      "Corporate wear, health wear, security, industrial, and hospitality — six categories in total, each designed around what that team actually does during a shift.",
   },
   {
     question: "Is everything really made in-house?",
     answer:
-      "Yes. Design, manufacturing, embroidery, and sublimation all happen in the same building in Calgary — nothing is outsourced to a third-party vendor.",
+      "Yes. Design, manufacturing, embroidery, and sublimation all happen in the same building in Suva, Fiji — nothing is outsourced to a third-party vendor.",
   },
   {
     question: "What's the difference between embroidery and sublimation?",
@@ -31,9 +31,9 @@ const FAQS = [
       "Embroidery stitches your logo directly onto the garment — durable and the standard choice for branding. Sublimation dyes a full-colour, all-over design into the fabric itself, for teams who want more than a logo on a plain garment.",
   },
   {
-    question: "Do you work with businesses outside Calgary?",
+    question: "Do you work with businesses outside Suva?",
     answer:
-      "We're based in Calgary and that's our core service area. If you're elsewhere in Alberta, reach out and we'll let you know what's possible.",
+      "We're based in Suva and that's our core service area. If you're elsewhere in Fiji, reach out and we'll let you know what's possible.",
   },
   {
     question: "How do I start an order?",

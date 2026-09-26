@@ -10,7 +10,7 @@ import ProductsMegaMenu from "@/components/navigation/ProductsMegaMenu";
 import MobileNav from "@/components/navigation/MobileNav";
 
 const NAV_LINKS = [{ href: "/", label: "Home" },{ href: "/about", label: "About" }];
-const POST_PRODUCTS_LINKS = [{ href: "/contact", label: "Contact" }];
+const POST_PRODUCTS_LINKS = [{ href: "/accessories", label: "Accessories" }, { href: "/contact", label: "Contact" }];
 
 // How long the mega-menu stays open after the pointer leaves both the
 // trigger and the panel — long enough to move the cursor diagonally from
@@ -54,13 +54,16 @@ export default function SiteHeader() {
 
       <div className="bg-foreground">
         <Container className="flex h-20 items-center justify-between">
-          <Link href="/" className="relative h-9 w-32 shrink-0 sm:h-10 sm:w-36">
+          <Link
+            href="/"
+            className="relative h-14 w-32 shrink-0 rounded-md bg-white px-1 py-1.5 sm:h-16 sm:w-36"
+          >
             <Image
-              src="/images/logo.png"
+              src="/images/smart-uniform-logo.png"
               alt="Smart Uniform and Embroidery"
               fill
               sizes="144px"
-              className="object-contain object-left"
+              className="object-contain"
               priority
             />
           </Link>

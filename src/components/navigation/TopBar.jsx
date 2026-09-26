@@ -14,11 +14,11 @@ export default function TopBar() {
       <Container className="flex h-10 items-center justify-between text-sm">
         <div className="flex items-center gap-4 sm:gap-6">
           <a
-            href="tel:+14036290862"
+            href="tel:+6793395162"
             className="flex items-center gap-2 font-sans font-medium transition-colors hover:text-primary"
           >
             <Phone strokeWidth={1.75} className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-            <span className="whitespace-nowrap">(403) 629-0862</span>
+            <span className="whitespace-nowrap">+679 339 5162</span>
           </a>
           <a
             href="mailto:info@smartuniform.ca"

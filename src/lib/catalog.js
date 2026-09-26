@@ -38,7 +38,7 @@ export const CATALOG_ITEMS = [
   {
     slug: "executive-polo",
     name: "Executive Polo",
-    categorySlug: "administration",
+    categorySlug: "corporate-wear",
     colours: [
       { name: "Charcoal", hex: "#36322c" },
       { name: "Navy", hex: "#1c2b45" },

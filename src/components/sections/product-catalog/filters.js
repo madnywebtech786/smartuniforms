@@ -1,8 +1,8 @@
 import { NEW_PRODUCTS, NEW_CATEGORIES } from "@/lib/newProducts";
 
 /**
- * Facet definitions for the /products catalog filter sidebar. Each facet
- * reads its option list directly from NEW_PRODUCTS rather than a
+ * Facet definitions for a catalog filter sidebar. Each facet reads its
+ * option list directly from the given product set rather than a
  * hardcoded list, so adding a new item or subcategory automatically
  * surfaces as a filter option with no changes needed here.
  *
@@ -24,27 +24,60 @@ import { NEW_PRODUCTS, NEW_CATEGORIES } from "@/lib/newProducts";
  * sleeveLength (see lib/newProducts.js), so there's no fixed field to
  * facet on yet. Revisit once enough real categories exist to know which
  * spec labels are common enough across items to facet on.
+ *
+ * `buildFacets(items)` lets a page scope the sidebar to a subset of the
+ * catalog (e.g. /accessories building facets from only its own category's
+ * products, so its Category facet only ever offers Accessories'
+ * subcategories) instead of always faceting the entire catalog. `FACETS`
+ * stays exported as the full-catalog default for /products and any nav
+ * component (ProductsMegaMenu.jsx, MobileNav.jsx) that needs every real
+ * category regardless of which page it renders in.
  */
-export const FACETS = [
-  {
-    key: "subcategorySlug",
-    label: "Category",
-    isGrouped: true,
-    options: groupSubcategoriesByCategory(NEW_PRODUCTS),
-  },
-  {
-    key: "colours",
-    label: "Colour",
-    isMultiValue: true,
-    options: dedupeColours(NEW_PRODUCTS),
-  },
-];
+export function buildFacets(items) {
+  return [
+    {
+      key: "subcategorySlug",
+      label: "Category",
+      isGrouped: true,
+      options: groupSubcategoriesByCategory(items),
+    },
+    {
+      key: "colours",
+      label: "Colour",
+      isMultiValue: true,
+      options: dedupeColours(items),
+    },
+  ];
+}
+
+export const FACETS = buildFacets(NEW_PRODUCTS);
+
+/**
+ * Every subcategorySlug that belongs to a given parent NEW_CATEGORIES slug
+ * (e.g. "health-wear" -> ["unisex-scrub-pant", "unisex-scrub-top", ...]).
+ * Lets a link that only knows the broad parent category (the homepage
+ * Categories cards, the mega-menu's "View All") pre-select every matching
+ * subcategory in the Category facet, without inventing a second,
+ * separate "parent category" facet alongside the existing
+ * subcategorySlug-based one.
+ */
+export function subcategorySlugsForCategory(categorySlug) {
+  return NEW_PRODUCTS.filter((item) => item.categorySlug === categorySlug).map(
+    (item) => item.subcategorySlug
+  );
+}
 
 /**
  * One entry per NEW_CATEGORIES parent (in NEW_CATEGORIES order), each
  * carrying only the subcategories that actually have products, in
- * first-seen order. A parent with zero matching products (shouldn't
- * happen today, but cheap to guard) is dropped rather than shown empty.
+ * first-seen order. A parent with zero matching products (e.g.
+ * "corporate-wear" as of 2026-09-26, reserved for future products) is
+ * still included with an empty `subcategories` array — client wants an
+ * empty category visibly listed (an expandable-but-empty accordion row
+ * in ProductFilters.jsx, a "View all" link with no items in
+ * ProductsMegaMenu.jsx/MobileNav.jsx) rather than silently hidden, so a
+ * real category that just doesn't have products yet doesn't read as
+ * missing/broken.
  */
 function groupSubcategoriesByCategory(items) {
   const subcategoriesByCategory = new Map();
@@ -62,7 +95,7 @@ function groupSubcategoriesByCategory(items) {
     value: category.slug,
     label: category.name,
     subcategories: Array.from(subcategoriesByCategory.get(category.slug)?.values() ?? []),
-  })).filter((category) => category.subcategories.length > 0);
+  }));
 }
 
 function dedupeColours(items) {
@@ -81,10 +114,13 @@ function dedupeColours(items) {
  * Returns true if `item` matches every active facet selection. Each
  * facet's selected values are OR'd together (any match passes that
  * facet); facets are AND'd together (must pass every facet with an
- * active selection).
+ * active selection). `facets` defaults to the full-catalog FACETS but
+ * accepts a scoped buildFacets() result too — both use the same two
+ * facet keys (subcategorySlug, colours), so the matching logic itself
+ * doesn't change, only which options a page's sidebar offered.
  */
-export function matchesFilters(item, activeFilters) {
-  return FACETS.every((facet) => {
+export function matchesFilters(item, activeFilters, facets = FACETS) {
+  return facets.every((facet) => {
     const selected = activeFilters[facet.key];
     if (!selected || selected.length === 0) return true;
 
