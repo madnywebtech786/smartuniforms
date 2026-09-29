@@ -22,7 +22,6 @@ export default function Story() {
     offset: ["start end", "end start"],
   });
 
-  const imageY = useTransform(scrollYProgress, [0, 1], ["-8%", "8%"]);
   const imageScale = useTransform(scrollYProgress, [0, 0.35], [1.1, 1]);
   const imageClip = useTransform(
     scrollYProgress,
@@ -97,10 +96,8 @@ export default function Story() {
                 className="relative aspect-4/5 w-full overflow-hidden rounded-xl"
               >
                 <motion.div
-                  style={
-                    prefersReducedMotion ? undefined : { y: imageY, scale: imageScale }
-                  }
-                  className="absolute inset-0 -top-[8%] -bottom-[8%]"
+                  style={prefersReducedMotion ? undefined : { scale: imageScale }}
+                  className="absolute inset-0"
                 >
                   <Image
                     src={STOCK_IMAGES.aboutStory.src}
@@ -110,7 +107,6 @@ export default function Story() {
                     className="object-cover"
                   />
                 </motion.div>
-                <div className="absolute inset-0 border border-border" />
               </motion.div>
             </div>
           </div>

@@ -48,7 +48,7 @@ export default function Hero() {
 
   return (
     <section
-      className="relative flex min-h-[120vh] w-full flex-col overflow-hidden bg-foreground"
+      className="relative flex min-h-screen w-full flex-col overflow-hidden bg-foreground md:min-h-[120vh]"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
       onFocus={() => setIsPaused(true)}

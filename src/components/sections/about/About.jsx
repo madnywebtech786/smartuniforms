@@ -67,7 +67,7 @@ export default function About() {
                     alt={STOCK_IMAGES.about.alt}
                     fill
                     sizes="(min-width: 1024px) 40vw, 100vw"
-                    className="object-cover "
+                    className="object-contain bg-surface"
                   />
                 </motion.div>
                 <div className="absolute inset-0 border border-border" />

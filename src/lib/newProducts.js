@@ -115,6 +115,10 @@ const STANDARD_CARE = [
  * length variant of the same garment (WSKS-150 short/26", WSKL-160
  * long/31"), both Navy, both 100% polyester — kept as 2 separate products
  * since length is a distinct choice a customer makes, not a colourway.
+ * Filed under categorySlug "corporate-wear" (moved there from "industrial"
+ * 2026-09-29, client request) — it's office/front-desk attire, not
+ * industrial workwear, despite originating from the same 15Sep PDF batch
+ * as the industrial counter shirts.
  *
  * Mens Security Shirt (15Sep/Security Shirt web.pdf, style MSSD-820) is a
  * single product, single colourway (Dark Grey/Charcoal) — first item in a
@@ -374,7 +378,7 @@ export const NEW_PRODUCTS = [
       "counterShirtMbbfy16Detail",
     ],
     description:
-      "Style MBBFY-16 two-tone mens counter shirt in a 60% cotton / 40% polyester blend — available in Black/Royal Blue.",
+      "Style MBBFY-16 two-tone mens counter shirt in a 60% cotton / 40% polyester blend, featuring a modern two-tone design and our newly styled logo patch for a fresh, professional look. Available in Black/Royal Blue.",
     specs: [
       { label: "Style", value: "MBBFY-16" },
       { label: "Size", value: "XS – 4XL" },
@@ -398,7 +402,7 @@ export const NEW_PRODUCTS = [
       "counterShirtMbyfy07Detail",
     ],
     description:
-      "Style MBYFY-07 two-tone mens counter shirt in a 60% cotton / 40% polyester blend — available in Black/Yellow.",
+      "Style MBYFY-07 two-tone mens counter shirt in a 60% cotton / 40% polyester blend, featuring a modern two-tone design and our newly styled logo patch for a fresh, professional look. Available in Black/Yellow.",
     specs: [
       { label: "Style", value: "MBYFY-07" },
       { label: "Size", value: "XS – 4XL" },
@@ -422,7 +426,7 @@ export const NEW_PRODUCTS = [
       "counterShirtMbrfy09Detail",
     ],
     description:
-      "Style MBRFY-09 two-tone mens counter shirt in a 60% cotton / 40% polyester blend — available in Black/Red.",
+      "Style MBRFY-09 two-tone mens counter shirt in a 60% cotton / 40% polyester blend, featuring a modern two-tone design and our newly styled logo patch for a fresh, professional look. Available in Black/Red.",
     specs: [
       { label: "Style", value: "MBRFY-09" },
       { label: "Size", value: "XS – 4XL" },
@@ -446,7 +450,7 @@ export const NEW_PRODUCTS = [
       "counterShirtMbgnfy28Detail",
     ],
     description:
-      "Style MBGNFY-28 two-tone mens counter shirt in a 60% cotton / 40% polyester blend — available in Black/Green.",
+      "Style MBGNFY-28 two-tone mens counter shirt in a 60% cotton / 40% polyester blend, featuring a modern two-tone design and our newly styled logo patch for a fresh, professional look. Available in Black/Green.",
     specs: [
       { label: "Style", value: "MBGNFY-28" },
       { label: "Size", value: "XS – 4XL" },
@@ -470,7 +474,7 @@ export const NEW_PRODUCTS = [
       "counterShirtMbgyfy13Detail",
     ],
     description:
-      "Style MBGYFY-13 two-tone mens counter shirt in a 60% cotton / 40% polyester blend — available in Black/Grey.",
+      "Style MBGYFY-13 two-tone mens counter shirt in a 60% cotton / 40% polyester blend, featuring a modern two-tone design and our newly styled logo patch for a fresh, professional look. Available in Black/Grey.",
     specs: [
       { label: "Style", value: "MBGYFY-13" },
       { label: "Size", value: "XS – 4XL" },
@@ -494,7 +498,7 @@ export const NEW_PRODUCTS = [
       "counterShirtMbufy12Detail",
     ],
     description:
-      "Style MBUFY-12 two-tone mens counter shirt in a 60% cotton / 40% polyester blend — available in Black/Burgundy.",
+      "Style MBUFY-12 two-tone mens counter shirt in a 60% cotton / 40% polyester blend, featuring a modern two-tone design and our newly styled logo patch for a fresh, professional look. Available in Black/Burgundy.",
     specs: [
       { label: "Style", value: "MBUFY-12" },
       { label: "Size", value: "XS – 4XL" },
@@ -518,7 +522,7 @@ export const NEW_PRODUCTS = [
       "counterShirtMgbfy16Detail",
     ],
     description:
-      "Style MGBFY-16 two-tone mens counter shirt in a 60% cotton / 40% polyester blend — available in Grey/Royal Blue.",
+      "Style MGBFY-16 two-tone mens counter shirt in a 60% cotton / 40% polyester blend, featuring a modern two-tone design and our newly styled logo patch for a fresh, professional look. Available in Grey/Royal Blue.",
     specs: [
       { label: "Style", value: "MGBFY-16" },
       { label: "Size", value: "XS – 4XL" },
@@ -542,7 +546,7 @@ export const NEW_PRODUCTS = [
       "counterShirtMgyfy07Detail",
     ],
     description:
-      "Style MGYFY-07 two-tone mens counter shirt in a 60% cotton / 40% polyester blend — available in Grey/Gold.",
+      "Style MGYFY-07 two-tone mens counter shirt in a 60% cotton / 40% polyester blend, featuring a modern two-tone design and our newly styled logo patch for a fresh, professional look. Available in Grey/Gold.",
     specs: [
       { label: "Style", value: "MGYFY-07" },
       { label: "Size", value: "XS – 4XL" },
@@ -566,7 +570,7 @@ export const NEW_PRODUCTS = [
       "counterShirtMgrfy09Detail",
     ],
     description:
-      "Style MGRFY-09 two-tone mens counter shirt in a 60% cotton / 40% polyester blend — available in Grey/Red.",
+      "Style MGRFY-09 two-tone mens counter shirt in a 60% cotton / 40% polyester blend, featuring a modern two-tone design and our newly styled logo patch for a fresh, professional look. Available in Grey/Red.",
     specs: [
       { label: "Style", value: "MGRFY-09" },
       { label: "Size", value: "XS – 4XL" },
@@ -590,7 +594,7 @@ export const NEW_PRODUCTS = [
       "counterShirtMggfy28Detail",
     ],
     description:
-      "Style MGGFY-28 two-tone mens counter shirt in a 60% cotton / 40% polyester blend — available in Grey/Green.",
+      "Style MGGFY-28 two-tone mens counter shirt in a 60% cotton / 40% polyester blend, featuring a modern two-tone design and our newly styled logo patch for a fresh, professional look. Available in Grey/Green.",
     specs: [
       { label: "Style", value: "MGGFY-28" },
       { label: "Size", value: "XS – 4XL" },
@@ -614,7 +618,7 @@ export const NEW_PRODUCTS = [
       "counterShirtMgbkfy15Detail",
     ],
     description:
-      "Style MGBKFY-15 two-tone mens counter shirt in a 60% cotton / 40% polyester blend — available in Grey/Black.",
+      "Style MGBKFY-15 two-tone mens counter shirt in a 60% cotton / 40% polyester blend, featuring a modern two-tone design and our newly styled logo patch for a fresh, professional look. Available in Grey/Black.",
     specs: [
       { label: "Style", value: "MGBKFY-15" },
       { label: "Size", value: "XS – 4XL" },
@@ -638,7 +642,7 @@ export const NEW_PRODUCTS = [
       "counterShirtMgufy12Detail",
     ],
     description:
-      "Style MGUFY-12 two-tone mens counter shirt in a 60% cotton / 40% polyester blend — available in Grey/Burgundy.",
+      "Style MGUFY-12 two-tone mens counter shirt in a 60% cotton / 40% polyester blend, featuring a modern two-tone design and our newly styled logo patch for a fresh, professional look. Available in Grey/Burgundy.",
     specs: [
       { label: "Style", value: "MGUFY-12" },
       { label: "Size", value: "XS – 4XL" },
@@ -662,7 +666,7 @@ export const NEW_PRODUCTS = [
       "counterShirtWbbfy16Detail",
     ],
     description:
-      "Style WBBFY-16 two-tone womans counter shirt in a 60% cotton / 40% polyester blend — available in Black/Royal Blue.",
+      "Style WBBFY-16 two-tone womans counter shirt in a 60% cotton / 40% polyester blend, featuring a modern two-tone design and our newly styled logo patch for a fresh, professional look. Available in Black/Royal Blue.",
     specs: [
       { label: "Style", value: "WBBFY-16" },
       { label: "Size", value: "XS – 4XL" },
@@ -686,7 +690,7 @@ export const NEW_PRODUCTS = [
       "counterShirtWbyfy07Detail",
     ],
     description:
-      "Style WBYFY-07 two-tone womans counter shirt in a 60% cotton / 40% polyester blend — available in Black/Gold.",
+      "Style WBYFY-07 two-tone womans counter shirt in a 60% cotton / 40% polyester blend, featuring a modern two-tone design and our newly styled logo patch for a fresh, professional look. Available in Black/Gold.",
     specs: [
       { label: "Style", value: "WBYFY-07" },
       { label: "Size", value: "XS – 4XL" },
@@ -710,7 +714,7 @@ export const NEW_PRODUCTS = [
       "counterShirtWbrfy09Detail",
     ],
     description:
-      "Style WBRFY-09 two-tone womans counter shirt in a 60% cotton / 40% polyester blend — available in Black/Red.",
+      "Style WBRFY-09 two-tone womans counter shirt in a 60% cotton / 40% polyester blend, featuring a modern two-tone design and our newly styled logo patch for a fresh, professional look. Available in Black/Red.",
     specs: [
       { label: "Style", value: "WBRFY-09" },
       { label: "Size", value: "XS – 4XL" },
@@ -734,7 +738,7 @@ export const NEW_PRODUCTS = [
       "counterShirtWbgnfy28Detail",
     ],
     description:
-      "Style WBGNFY-28 two-tone womans counter shirt in a 60% cotton / 40% polyester blend — available in Black/Green.",
+      "Style WBGNFY-28 two-tone womans counter shirt in a 60% cotton / 40% polyester blend, featuring a modern two-tone design and our newly styled logo patch for a fresh, professional look. Available in Black/Green.",
     specs: [
       { label: "Style", value: "WBGNFY-28" },
       { label: "Size", value: "XS – 4XL" },
@@ -758,7 +762,7 @@ export const NEW_PRODUCTS = [
       "counterShirtWbgyfy13Detail",
     ],
     description:
-      "Style WBGYFY-13 two-tone womans counter shirt in a 60% cotton / 40% polyester blend — available in Black/Grey.",
+      "Style WBGYFY-13 two-tone womans counter shirt in a 60% cotton / 40% polyester blend, featuring a modern two-tone design and our newly styled logo patch for a fresh, professional look. Available in Black/Grey.",
     specs: [
       { label: "Style", value: "WBGYFY-13" },
       { label: "Size", value: "XS – 4XL" },
@@ -782,7 +786,7 @@ export const NEW_PRODUCTS = [
       "counterShirtWbufy12Detail",
     ],
     description:
-      "Style WBUFY-12 two-tone womans counter shirt in a 60% cotton / 40% polyester blend — available in Black/Burgundy.",
+      "Style WBUFY-12 two-tone womans counter shirt in a 60% cotton / 40% polyester blend, featuring a modern two-tone design and our newly styled logo patch for a fresh, professional look. Available in Black/Burgundy.",
     specs: [
       { label: "Style", value: "WBUFY-12" },
       { label: "Size", value: "XS – 4XL" },
@@ -806,7 +810,7 @@ export const NEW_PRODUCTS = [
       "counterShirtWgbfy16Detail",
     ],
     description:
-      "Style WGBFY-16 two-tone womans counter shirt in a 60% cotton / 40% polyester blend — available in Grey/Royal Blue.",
+      "Style WGBFY-16 two-tone womans counter shirt in a 60% cotton / 40% polyester blend, featuring a modern two-tone design and our newly styled logo patch for a fresh, professional look. Available in Grey/Royal Blue.",
     specs: [
       { label: "Style", value: "WGBFY-16" },
       { label: "Size", value: "XS – 4XL" },
@@ -830,7 +834,7 @@ export const NEW_PRODUCTS = [
       "counterShirtWgyfy07Detail",
     ],
     description:
-      "Style WGYFY-07 two-tone womans counter shirt in a 60% cotton / 40% polyester blend — available in Grey/Gold.",
+      "Style WGYFY-07 two-tone womans counter shirt in a 60% cotton / 40% polyester blend, featuring a modern two-tone design and our newly styled logo patch for a fresh, professional look. Available in Grey/Gold.",
     specs: [
       { label: "Style", value: "WGYFY-07" },
       { label: "Size", value: "XS – 4XL" },
@@ -854,7 +858,7 @@ export const NEW_PRODUCTS = [
       "counterShirtWgrfy09Detail",
     ],
     description:
-      "Style WGRFY-09 two-tone womans counter shirt in a 60% cotton / 40% polyester blend — available in Grey/Red.",
+      "Style WGRFY-09 two-tone womans counter shirt in a 60% cotton / 40% polyester blend, featuring a modern two-tone design and our newly styled logo patch for a fresh, professional look. Available in Grey/Red.",
     specs: [
       { label: "Style", value: "WGRFY-09" },
       { label: "Size", value: "XS – 4XL" },
@@ -878,7 +882,7 @@ export const NEW_PRODUCTS = [
       "counterShirtWggnfy28Detail",
     ],
     description:
-      "Style WGGNFY-28 two-tone womans counter shirt in a 60% cotton / 40% polyester blend — available in Grey/Green.",
+      "Style WGGNFY-28 two-tone womans counter shirt in a 60% cotton / 40% polyester blend, featuring a modern two-tone design and our newly styled logo patch for a fresh, professional look. Available in Grey/Green.",
     specs: [
       { label: "Style", value: "WGGNFY-28" },
       { label: "Size", value: "XS – 4XL" },
@@ -902,7 +906,7 @@ export const NEW_PRODUCTS = [
       "counterShirtWgbkfy15Detail",
     ],
     description:
-      "Style WGBKFY-15 two-tone womans counter shirt in a 60% cotton / 40% polyester blend — available in Grey/Black.",
+      "Style WGBKFY-15 two-tone womans counter shirt in a 60% cotton / 40% polyester blend, featuring a modern two-tone design and our newly styled logo patch for a fresh, professional look. Available in Grey/Black.",
     specs: [
       { label: "Style", value: "WGBKFY-15" },
       { label: "Size", value: "XS – 4XL" },
@@ -926,7 +930,7 @@ export const NEW_PRODUCTS = [
       "counterShirtWgufy12Detail",
     ],
     description:
-      "Style WGUFY-12 two-tone womans counter shirt in a 60% cotton / 40% polyester blend — available in Grey/Burgundy.",
+      "Style WGUFY-12 two-tone womans counter shirt in a 60% cotton / 40% polyester blend, featuring a modern two-tone design and our newly styled logo patch for a fresh, professional look. Available in Grey/Burgundy.",
     specs: [
       { label: "Style", value: "WGUFY-12" },
       { label: "Size", value: "XS – 4XL" },
@@ -938,7 +942,7 @@ export const NEW_PRODUCTS = [
     slug: "womans-skirt-wsks-150",
     name: "Womans Skirt",
     style: "WSKS-150",
-    categorySlug: "industrial",
+    categorySlug: "corporate-wear",
     subcategorySlug: "womans-skirt",
     subcategoryName: "Womans Skirt",
     colours: [{ name: "Navy", hex: "#1c2b45" }],
@@ -958,7 +962,7 @@ export const NEW_PRODUCTS = [
     slug: "womans-skirt-wskl-160",
     name: "Womans Skirt",
     style: "WSKL-160",
-    categorySlug: "industrial",
+    categorySlug: "corporate-wear",
     subcategorySlug: "womans-skirt",
     subcategoryName: "Womans Skirt",
     colours: [{ name: "Navy", hex: "#1c2b45" }],
@@ -1952,7 +1956,7 @@ export const NEW_PRODUCTS = [
     imageKey: "industrialPoloIpos2030",
     gallery: ["industrialPoloIpos2030", "industrialPoloIpos2030Detail"],
     description:
-      "Style IPOS-2030 short-sleeve hi-vis industrial polo in polyester — available in Orange/Black.",
+      "Style IPOS-2030 short-sleeve hi-vis industrial polo in polyester, featuring a modern two-tone design and our newly styled logo patch for a fresh, professional look. Available in Orange/Black.",
     specs: [
       { label: "Style", value: "IPOS-2030" },
       { label: "Sleeve", value: "Short sleeve" },
@@ -1972,7 +1976,7 @@ export const NEW_PRODUCTS = [
     imageKey: "industrialPoloIpol2040",
     gallery: ["industrialPoloIpol2040", "industrialPoloIpol2040Detail"],
     description:
-      "Style IPOL-2040 long-sleeve hi-vis industrial polo in polyester — available in Orange/Navy.",
+      "Style IPOL-2040 long-sleeve hi-vis industrial polo in polyester, featuring a modern two-tone design and our newly styled logo patch for a fresh, professional look. Available in Orange/Navy.",
     specs: [
       { label: "Style", value: "IPOL-2040" },
       { label: "Sleeve", value: "Long sleeve" },
@@ -1992,7 +1996,7 @@ export const NEW_PRODUCTS = [
     imageKey: "industrialPoloIpgs2050",
     gallery: ["industrialPoloIpgs2050", "industrialPoloIpgs2050Detail"],
     description:
-      "Style IPGS-2050 short-sleeve hi-vis industrial polo in polyester — available in Yellow/Navy.",
+      "Style IPGS-2050 short-sleeve hi-vis industrial polo in polyester, featuring a modern two-tone design and our newly styled logo patch for a fresh, professional look. Available in Yellow/Navy.",
     specs: [
       { label: "Style", value: "IPGS-2050" },
       { label: "Sleeve", value: "Short sleeve" },
@@ -2012,7 +2016,7 @@ export const NEW_PRODUCTS = [
     imageKey: "industrialPoloIpgl2060",
     gallery: ["industrialPoloIpgl2060", "industrialPoloIpgl2060Detail"],
     description:
-      "Style IPGL-2060 long-sleeve hi-vis industrial polo in polyester — available in Yellow/Navy.",
+      "Style IPGL-2060 long-sleeve hi-vis industrial polo in polyester, featuring a modern two-tone design and our newly styled logo patch for a fresh, professional look. Available in Yellow/Navy.",
     specs: [
       { label: "Style", value: "IPGL-2060" },
       { label: "Sleeve", value: "Long sleeve" },
@@ -2032,7 +2036,7 @@ export const NEW_PRODUCTS = [
     imageKey: "industrialShirtIsos3535",
     gallery: ["industrialShirtIsos3535", "industrialShirtIsos3535Detail"],
     description:
-      "Style ISOS-3535 short-sleeve hi-vis industrial shirt in a 65% poly / 35% cotton blend — available in Orange/Navy.",
+      "Style ISOS-3535 short-sleeve hi-vis industrial shirt in a 65% poly / 35% cotton blend, featuring a modern two-tone design and our newly styled logo patch for a fresh, professional look. Available in Orange/Navy.",
     specs: [
       { label: "Style", value: "ISOS-3535" },
       { label: "Sleeve", value: "Short sleeve" },
@@ -2052,7 +2056,7 @@ export const NEW_PRODUCTS = [
     imageKey: "industrialShirtIsol3545",
     gallery: ["industrialShirtIsol3545", "industrialShirtIsol3545Detail"],
     description:
-      "Style ISOL-3545 long-sleeve hi-vis industrial shirt in a 65% poly / 35% cotton blend — available in Orange/Navy.",
+      "Style ISOL-3545 long-sleeve hi-vis industrial shirt in a 65% poly / 35% cotton blend, featuring a modern two-tone design and our newly styled logo patch for a fresh, professional look. Available in Orange/Navy.",
     specs: [
       { label: "Style", value: "ISOL-3545" },
       { label: "Sleeve", value: "Long sleeve" },
@@ -2072,7 +2076,7 @@ export const NEW_PRODUCTS = [
     imageKey: "industrialShirtIsys3550",
     gallery: ["industrialShirtIsys3550", "industrialShirtIsys3550Detail"],
     description:
-      "Style ISYS-3550 short-sleeve hi-vis industrial shirt in a 65% poly / 35% cotton blend — available in Yellow/Navy.",
+      "Style ISYS-3550 short-sleeve hi-vis industrial shirt in a 65% poly / 35% cotton blend, featuring a modern two-tone design and our newly styled logo patch for a fresh, professional look. Available in Yellow/Navy.",
     specs: [
       { label: "Style", value: "ISYS-3550" },
       { label: "Sleeve", value: "Short sleeve" },
@@ -2092,7 +2096,7 @@ export const NEW_PRODUCTS = [
     imageKey: "industrialShirtIsyl3560",
     gallery: ["industrialShirtIsyl3560", "industrialShirtIsyl3560Detail"],
     description:
-      "Style ISYL-3560 long-sleeve hi-vis industrial shirt in a 65% poly / 35% cotton blend — available in Yellow/Navy.",
+      "Style ISYL-3560 long-sleeve hi-vis industrial shirt in a 65% poly / 35% cotton blend, featuring a modern two-tone design and our newly styled logo patch for a fresh, professional look. Available in Yellow/Navy.",
     specs: [
       { label: "Style", value: "ISYL-3560" },
       { label: "Sleeve", value: "Long sleeve" },
