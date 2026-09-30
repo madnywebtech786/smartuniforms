@@ -27,10 +27,10 @@ export default function SiteFooter() {
           <div className="lg:col-span-1">
             <Link
               href="/"
-              className="relative block h-16 w-36 rounded-md bg-white px-1 py-1.5"
+              className="relative block h-16 w-36 rounded-md bg-foreground px-2 py-2.5"
             >
               <Image
-                src="/images/smart-uniform-logo.png"
+                src="/images/logo.webp"
                 alt="Smart Uniform and Embroidery"
                 fill
                 sizes="144px"

@@ -11,7 +11,7 @@ import { EASE_CINEMATIC as EASE, revealUp } from "@/lib/motion";
 
 const STATS = [
   { value: "6", label: "Industries served" },
-  { value: "In-house", label: "Manufacturing & embroidery" },
+  { value: "In-house", label: "Manufacturing, embroidery & sublimation" },
   { value: "Suva, Fiji", label: "Locally based" },
 ];
 

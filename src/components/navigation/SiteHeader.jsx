@@ -54,12 +54,9 @@ export default function SiteHeader() {
 
       <div className="bg-foreground">
         <Container className="flex h-20 items-center justify-between">
-          <Link
-            href="/"
-            className="relative h-14 w-32 shrink-0 rounded-md bg-white px-1 py-1.5 sm:h-16 sm:w-36"
-          >
+          <Link href="/" className="relative h-14 w-32 shrink-0 sm:h-16 sm:w-36">
             <Image
-              src="/images/smart-uniform-logo.png"
+              src="/images/logo.webp"
               alt="Smart Uniform and Embroidery"
               fill
               sizes="144px"
