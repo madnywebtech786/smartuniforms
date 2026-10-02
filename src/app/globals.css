@@ -13,6 +13,7 @@
   --thread-gold-deep: #e0932e;
   --graphite: #5c584f;
   --hairline: #e3ddce;
+  --rust-red: #b3432b;
 
   /* Semantic tokens */
   --color-background: var(--canvas);
@@ -26,6 +27,7 @@
   --color-primary-foreground: var(--stitch-black);
   --color-accent: var(--thread-gold);
   --color-accent-foreground: var(--stitch-black);
+  --color-destructive: var(--rust-red);
 
   /* Motion */
   --ease-cinematic: cubic-bezier(0.16, 1, 0.3, 1);
@@ -44,6 +46,7 @@
   --color-primary-foreground: var(--color-primary-foreground);
   --color-accent: var(--color-accent);
   --color-accent-foreground: var(--color-accent-foreground);
+  --color-destructive: var(--color-destructive);
 
   --font-display: var(--font-carter-one);
   --font-sans: var(--font-familjen-grotesk);
