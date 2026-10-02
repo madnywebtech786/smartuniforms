@@ -7,11 +7,12 @@ import { EASE_CINEMATIC as EASE } from "@/lib/motion";
 
 const FIELDS = [
   { name: "name", label: "Full name", type: "text", autoComplete: "name" },
+  { name: "company", label: "Company name", type: "text", autoComplete: "organization" },
   { name: "email", label: "Email address", type: "email", autoComplete: "email" },
   { name: "phone", label: "Phone number", type: "tel", autoComplete: "tel" },
 ];
 
-const INITIAL_VALUES = { name: "", email: "", phone: "", message: "" };
+const INITIAL_VALUES = { name: "", company: "", email: "", phone: "", message: "" };
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 /**

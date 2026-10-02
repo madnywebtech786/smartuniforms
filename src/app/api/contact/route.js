@@ -2,17 +2,20 @@ import { sendMail } from "@/lib/mailer";
 import { renderContactEmail } from "@/lib/emailTemplate";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const MAX_LENGTHS = { name: 120, email: 180, phone: 40, message: 4000 };
+const MAX_LENGTHS = { name: 120, company: 120, email: 180, phone: 40, message: 4000 };
 
 function validate(body) {
   const errors = {};
   const name = typeof body.name === "string" ? body.name.trim() : "";
+  const company = typeof body.company === "string" ? body.company.trim() : "";
   const email = typeof body.email === "string" ? body.email.trim() : "";
   const phone = typeof body.phone === "string" ? body.phone.trim() : "";
   const message = typeof body.message === "string" ? body.message.trim() : "";
 
   if (!name) errors.name = "Full name is required.";
   else if (name.length > MAX_LENGTHS.name) errors.name = "Full name is too long.";
+
+  if (company.length > MAX_LENGTHS.company) errors.company = "Company name is too long.";
 
   if (!email) errors.email = "Email address is required.";
   else if (!EMAIL_PATTERN.test(email) || email.length > MAX_LENGTHS.email) {
@@ -25,7 +28,7 @@ function validate(body) {
   if (!message) errors.message = "Tell us what you need.";
   else if (message.length > MAX_LENGTHS.message) errors.message = "Message is too long.";
 
-  return { errors, values: { name, email, phone, message } };
+  return { errors, values: { name, company, email, phone, message } };
 }
 
 export async function POST(request) {

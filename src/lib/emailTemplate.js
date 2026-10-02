@@ -31,7 +31,7 @@ function row(label, value) {
     </tr>`;
 }
 
-export function renderContactEmail({ name, email, phone, message }) {
+export function renderContactEmail({ name, company, email, phone, message }) {
   const html = `<!DOCTYPE html>
 <html lang="en">
   <head>
@@ -58,6 +58,7 @@ export function renderContactEmail({ name, email, phone, message }) {
               <td style="padding:28px 32px 8px;">
                 <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
                   ${row("Full name", name)}
+                  ${row("Company name", company)}
                   ${row("Email address", email)}
                   ${row("Phone number", phone)}
                 </table>
@@ -93,6 +94,7 @@ export function renderContactEmail({ name, email, phone, message }) {
     "New quote request — Smart Uniform",
     "",
     `Full name: ${name}`,
+    company ? `Company name: ${company}` : null,
     `Email address: ${email}`,
     phone ? `Phone number: ${phone}` : null,
     "",
