@@ -29,8 +29,8 @@ const CONTACT_DETAILS = [
   {
     icon: Mail,
     label: "Email us",
-    value: "info@smartuniform.ca",
-    href: "mailto:info@smartuniform.ca",
+    value: "info@smartuniform.com.fj",
+    href: "mailto:info@smartuniform.com.fj",
   },
   {
     icon: MapPin,

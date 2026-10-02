@@ -21,11 +21,11 @@ export default function TopBar() {
             <span className="whitespace-nowrap">+679 339 5162</span>
           </a>
           <a
-            href="mailto:info@smartuniform.ca"
+            href="mailto:info@smartuniform.com.fj"
             className="hidden items-center gap-2 font-sans font-medium transition-colors hover:text-primary sm:flex"
           >
             <Mail strokeWidth={1.75} className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-            <span className="whitespace-nowrap">info@smartuniform.ca</span>
+            <span className="whitespace-nowrap">info@smartuniform.com.fj</span>
           </a>
         </div>
 

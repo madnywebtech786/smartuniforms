@@ -96,10 +96,10 @@ export default function SiteFooter() {
               </li>
               <li>
                 <a
-                  href="mailto:info@smartuniform.ca"
+                  href="mailto:info@smartuniform.com.fj"
                   className="transition-colors hover:text-primary"
                 >
-                  info@smartuniform.ca
+                  info@smartuniform.com.fj
                 </a>
               </li>
               <li className="leading-relaxed">
